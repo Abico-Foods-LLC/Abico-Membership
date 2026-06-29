@@ -1,0 +1,103 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  MEMBER
+  EMPLOYEE
+  STORE_ADMIN
+  PLATFORM_ADMIN
+}
+
+enum TransactionType {
+  EARN
+  REDEEM
+  BONUS
+  ADJUSTMENT
+  REFERRAL
+}
+
+model User {
+  id           String   @id @default(cuid())
+  phone        String   @unique
+  email        String?
+  name         String
+  passwordHash String
+  qrCode       String   @unique
+  referralCode String   @unique
+  referredById String?
+  role         Role     @default(MEMBER)
+  storeId      String?
+  pin          String?
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  store              Store?             @relation(fields: [storeId], references: [id])
+  referredBy         User?              @relation("Referrals", fields: [referredById], references: [id])
+  referrals          User[]             @relation("Referrals")
+  transactions       PointTransaction[] @relation("MemberTransactions")
+  employeeTransactions PointTransaction[] @relation("EmployeeTransactions")
+
+  @@index([storeId])
+  @@index([role])
+}
+
+model Store {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  logo        String?
+  address     String?
+  phone       String?
+  description String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  employees    User[]
+  transactions PointTransaction[]
+  promotions   Promotion[]
+}
+
+model PointTransaction {
+  id              String          @id @default(cuid())
+  userId          String
+  storeId         String?
+  employeeId      String?
+  type            TransactionType
+  points          Int
+  purchaseAmount  Int?
+  multiplier      Float           @default(1)
+  description     String?
+  createdAt       DateTime        @default(now())
+
+  user     User   @relation("MemberTransactions", fields: [userId], references: [id])
+  store    Store? @relation(fields: [storeId], references: [id])
+  employee User?  @relation("EmployeeTransactions", fields: [employeeId], references: [id])
+
+  @@index([userId])
+  @@index([storeId])
+  @@index([createdAt])
+}
+
+model Promotion {
+  id         String   @id @default(cuid())
+  storeId    String?
+  title      String
+  multiplier Float    @default(2)
+  startsAt   DateTime
+  endsAt     DateTime
+  isActive   Boolean  @default(true)
+  createdAt  DateTime @default(now())
+
+  store Store? @relation(fields: [storeId], references: [id])
+
+  @@index([storeId])
+  @@index([isActive])
+}
