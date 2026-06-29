@@ -58,7 +58,7 @@ export default function DashboardPage() {
   }
 
   if (error) return <div className="min-h-screen"><Navbar /><p className="mx-auto mt-20 max-w-sm text-center text-red-300">{error}</p></div>;
-  if (!data) return <div className="min-h-screen"><Navbar /><p className="mx-auto mt-20 max-w-sm text-center text-blue-100/60">Ачааллаж байна...</p></div>;
+  if (!data) return <div className="min-h-screen"><Navbar loading /><p className="mx-auto mt-20 max-w-sm text-center text-blue-100/60">Ачааллаж байна...</p></div>;
 
   const { user, points, tier, nextTier, pointsToNext } = data;
   const progressPct = nextTier

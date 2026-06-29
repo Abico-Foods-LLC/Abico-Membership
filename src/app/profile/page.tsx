@@ -71,7 +71,7 @@ export default function ProfilePage() {
   }
 
   if (!me) return (
-    <div className="min-h-screen"><Navbar />
+    <div className="min-h-screen"><Navbar loading />
       <p className="mx-auto mt-20 text-center text-blue-100/60">Ачааллаж байна...</p>
     </div>
   );
