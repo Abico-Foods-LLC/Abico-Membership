@@ -86,7 +86,7 @@ export default function DashboardPage() {
         </div>
       )}
 
-      <main className="mx-auto max-w-2xl px-4 py-8">
+      <main className="mx-auto max-w-6xl px-4 py-8">
 
         {/* ── Active promotions banner ── */}
         {data.promotions.length > 0 && (
@@ -108,132 +108,80 @@ export default function DashboardPage() {
           </div>
         )}
 
-        {/* ── Membership Card ── */}
-        <div className="relative overflow-hidden rounded-3xl p-6 sm:p-8"
-          style={{ background: "linear-gradient(135deg, #001C3B 0%, #023876 60%, #001C3B 100%)" }}>
+        <div className="grid gap-6 lg:grid-cols-[1fr_1.1fr]">
+          {/* ── Left: Membership Card ── */}
+          <div>
+            <div className="relative overflow-hidden rounded-3xl p-6 sm:p-8"
+              style={{ background: "linear-gradient(135deg, #001C3B 0%, #023876 60%, #001C3B 100%)" }}>
 
-          <div className="pointer-events-none absolute -right-16 -top-16 h-64 w-64 rounded-full"
-            style={{ background: "radial-gradient(circle, rgba(21,114,190,0.25) 0%, transparent 70%)" }} />
-          <div className="pointer-events-none absolute -bottom-12 -left-12 h-48 w-48 rounded-full"
-            style={{ background: `radial-gradient(circle, ${tier.color}33 0%, transparent 70%)` }} />
+              <div className="pointer-events-none absolute -right-16 -top-16 h-64 w-64 rounded-full"
+                style={{ background: "radial-gradient(circle, rgba(21,114,190,0.25) 0%, transparent 70%)" }} />
+              <div className="pointer-events-none absolute -bottom-12 -left-12 h-48 w-48 rounded-full"
+                style={{ background: `radial-gradient(circle, ${tier.color}33 0%, transparent 70%)` }} />
 
-          {/* Top */}
-          <div className="relative flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <span className="flex h-9 w-9 items-center justify-center rounded-full bg-abico-blue text-sm font-bold text-white">A</span>
-              <div>
-                <p className="text-xs font-bold tracking-widest text-abico-light">ABICO</p>
-                <p className="text-xs text-blue-100/50">LOYALTY CARD</p>
-              </div>
-            </div>
-            <span className="rounded-full border px-3 py-1 text-xs font-bold tracking-wide"
-              style={{ borderColor: tier.color, color: tier.color, backgroundColor: tier.color + "22" }}>
-              ★ {tier.nameMn}
-            </span>
-          </div>
-
-          {/* Name + points left, QR right */}
-          <div className="relative mt-6 flex gap-6">
-            <div className="flex-1">
-              <p className="text-sm text-blue-100/60">Гишүүний нэр</p>
-              <p className="mt-0.5 text-2xl font-bold">{user.name}</p>
-              <div className="mt-4">
-                <p className="text-sm text-blue-100/60">Нийт оноо</p>
-                <p className="text-4xl font-extrabold text-abico-gold">{formatPoints(points)}</p>
-              </div>
-              {nextTier && (
-                <div className="mt-4">
-                  <div className="h-2 w-full overflow-hidden rounded-full bg-white/10">
-                    <div className="h-full rounded-full"
-                      style={{ width: `${progressPct}%`, background: `linear-gradient(90deg, ${tier.color}, #1572BE)` }} />
+              {/* Top */}
+              <div className="relative flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <span className="flex h-9 w-9 items-center justify-center rounded-full bg-abico-blue text-sm font-bold text-white">A</span>
+                  <div>
+                    <p className="text-xs font-bold tracking-widest text-abico-light">ABICO</p>
+                    <p className="text-xs text-blue-100/50">LOYALTY CARD</p>
                   </div>
-                  <p className="mt-1.5 text-xs text-blue-100/50">
-                    {formatPoints(pointsToNext)} оноо → <span style={{ color: nextTier.color }}>{nextTier.nameMn}</span>
-                  </p>
                 </div>
-              )}
-              <div className="mt-5 inline-flex items-center gap-2 rounded-xl bg-white/10 px-3 py-2">
-                <span className="text-xs text-blue-100/60">Хөнгөлөлт</span>
-                <span className="text-lg font-extrabold" style={{ color: tier.color }}>{tier.discountPercent}%</span>
-              </div>
-            </div>
-
-            {/* QR — tap to fullscreen */}
-            <button type="button" onClick={() => setQrFullscreen(true)}
-              className="flex flex-col items-center justify-center transition hover:opacity-80 active:scale-95"
-              title="Томруулах">
-              <div className="rounded-2xl bg-white p-3 shadow-xl">
-                <QRCode value={user.qrCode} size={110} />
-              </div>
-              <p className="mt-1.5 text-center text-[10px] text-blue-100/40">Дарж томруулах</p>
-            </button>
-          </div>
-
-          <div className="relative mt-6 border-t border-white/10 pt-4">
-            <p className="text-center text-xs text-blue-100/40">
-              {user.qrCode} · Дэлгүүрт QR кодоо үзүүлж оноо цуглуулна
-            </p>
-          </div>
-        </div>
-
-        {/* ── Tabs ── */}
-        <div className="mt-6 flex rounded-2xl border border-white/10 bg-white/5 p-1">
-          <TabBtn active={tab === "history"} onClick={() => setTab("history")}>
-            <History className="h-4 w-4" /> Түүх
-          </TabBtn>
-          <TabBtn active={tab === "referral"} onClick={() => setTab("referral")}>
-            <Share2 className="h-4 w-4" /> Урилга
-          </TabBtn>
-          <TabBtn active={tab === "stores"} onClick={() => setTab("stores")}>
-            <Store className="h-4 w-4" /> Дэлгүүр
-          </TabBtn>
-        </div>
-
-        {/* ── History ── */}
-        {tab === "history" && (
-          <div className="mt-4 space-y-3">
-            {data.transactions.length === 0 ? (
-              <div className="rounded-2xl border border-white/10 bg-white/5 px-6 py-10 text-center">
-                <p className="text-sm text-blue-100/50">Одоогоор гүйлгээ байхгүй байна.</p>
-                <p className="mt-1 text-xs text-blue-100/30">Дэлгүүрт QR кодоо үзүүлж оноо цуглуулна уу.</p>
-              </div>
-            ) : data.transactions.map((tx) => (
-              <div key={tx.id} className="flex items-center justify-between rounded-2xl border border-white/10 bg-white/5 px-4 py-3">
-                <div>
-                  <p className="text-sm font-medium">{tx.description ?? tx.store?.name ?? "Гүйлгээ"}</p>
-                  <p className="mt-0.5 text-xs text-blue-100/50">
-                    {new Date(tx.createdAt).toLocaleString("mn-MN")}
-                    {tx.purchaseAmount ? ` · ${formatMnt(tx.purchaseAmount)}` : ""}
-                  </p>
-                </div>
-                <span className={`text-sm font-bold ${tx.type === "REDEEM" ? "text-red-300" : "text-emerald-300"}`}>
-                  {tx.type === "REDEEM" ? "-" : "+"}{formatPoints(tx.points)}
+                <span className="rounded-full border px-3 py-1 text-xs font-bold tracking-wide"
+                  style={{ borderColor: tier.color, color: tier.color, backgroundColor: tier.color + "22" }}>
+                  ★ {tier.nameMn}
                 </span>
               </div>
-            ))}
-          </div>
-        )}
 
-        {/* ── Referral ── */}
-        {tab === "referral" && (
-          <div className="mt-4 space-y-4">
-            <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
-              <p className="font-semibold">Урилгын код</p>
-              <p className="mt-1 text-sm text-blue-100/60">
-                Найзаа урьж тус бүр <span className="font-bold text-abico-gold">+50 оноо</span> авна
-              </p>
-              <div className="mt-4 flex items-center justify-between rounded-xl bg-white/10 px-4 py-3">
-                <code className="font-mono text-xl tracking-widest">{user.referralCode}</code>
-                <button type="button" onClick={() => copy(user.referralCode)} className="text-abico-light hover:text-white">
-                  <Copy className="h-5 w-5" />
+              {/* Name + points left, QR right */}
+              <div className="relative mt-6 flex gap-6">
+                <div className="flex-1">
+                  <p className="text-sm text-blue-100/60">Гишүүний нэр</p>
+                  <p className="mt-0.5 text-2xl font-bold">{user.name}</p>
+                  <div className="mt-4">
+                    <p className="text-sm text-blue-100/60">Нийт оноо</p>
+                    <p className="text-4xl font-extrabold text-abico-gold">{formatPoints(points)}</p>
+                  </div>
+                  {nextTier && (
+                    <div className="mt-4">
+                      <div className="h-2 w-full overflow-hidden rounded-full bg-white/10">
+                        <div className="h-full rounded-full"
+                          style={{ width: `${progressPct}%`, background: `linear-gradient(90deg, ${tier.color}, #1572BE)` }} />
+                      </div>
+                      <p className="mt-1.5 text-xs text-blue-100/50">
+                        {formatPoints(pointsToNext)} оноо → <span style={{ color: nextTier.color }}>{nextTier.nameMn}</span>
+                      </p>
+                    </div>
+                  )}
+                  <div className="mt-5 inline-flex items-center gap-2 rounded-xl bg-white/10 px-3 py-2">
+                    <span className="text-xs text-blue-100/60">Хөнгөлөлт</span>
+                    <span className="text-lg font-extrabold" style={{ color: tier.color }}>{tier.discountPercent}%</span>
+                  </div>
+                </div>
+
+                {/* QR — tap to fullscreen */}
+                <button type="button" onClick={() => setQrFullscreen(true)}
+                  className="flex flex-col items-center justify-center transition hover:opacity-80 active:scale-95"
+                  title="Томруулах">
+                  <div className="rounded-2xl bg-white p-3 shadow-xl">
+                    <QRCode value={user.qrCode} size={110} />
+                  </div>
+                  <p className="mt-1.5 text-center text-[10px] text-blue-100/40">Дарж томруулах</p>
                 </button>
               </div>
-              {copied && <p className="mt-2 text-center text-xs text-emerald-300">✓ Хуулагдлаа</p>}
+
+              <div className="relative mt-6 border-t border-white/10 pt-4">
+                <p className="text-center text-xs text-blue-100/40">
+                  {user.qrCode} · Дэлгүүрт QR кодоо үзүүлж оноо цуглуулна
+                </p>
+              </div>
             </div>
 
-            <div className="rounded-2xl border p-5"
+            {/* Referral card — visible on desktop below membership card */}
+            <div className="mt-4 hidden rounded-2xl border p-5 lg:block"
               style={{ borderColor: tier.color + "44", background: tier.color + "11" }}>
-              <div className="flex items-center gap-2 mb-3">
+              <div className="mb-3 flex items-center gap-2">
                 <span className="rounded-full px-2 py-0.5 text-xs font-bold"
                   style={{ backgroundColor: tier.color + "33", color: tier.color }}>★ {tier.nameMn}</span>
                 <p className="font-semibold">гишүүний давуу эрх</p>
@@ -249,27 +197,104 @@ export default function DashboardPage() {
               )}
             </div>
           </div>
-        )}
 
-        {/* ── Stores ── */}
-        {tab === "stores" && (
-          <div className="mt-4 space-y-3">
-            {data.stores.length === 0 ? (
-              <p className="py-8 text-center text-sm text-blue-100/50">Дэлгүүр бүртгэлгүй байна</p>
-            ) : data.stores.map((s) => (
-              <div key={s.id} className="rounded-2xl border border-white/10 bg-white/5 px-4 py-4">
-                <div className="flex items-start justify-between">
-                  <div>
-                    <p className="font-semibold">{s.name}</p>
-                    {s.address && <p className="mt-1 text-sm text-blue-100/60">📍 {s.address}</p>}
-                    {s.phone && <p className="mt-0.5 text-sm text-blue-100/60">📞 {s.phone}</p>}
+          {/* ── Right: Tabs ── */}
+          <div>
+            <div className="flex rounded-2xl border border-white/10 bg-white/5 p-1">
+              <TabBtn active={tab === "history"} onClick={() => setTab("history")}>
+                <History className="h-4 w-4" /> Түүх
+              </TabBtn>
+              <TabBtn active={tab === "referral"} onClick={() => setTab("referral")}>
+                <Share2 className="h-4 w-4" /> Урилга
+              </TabBtn>
+              <TabBtn active={tab === "stores"} onClick={() => setTab("stores")}>
+                <Store className="h-4 w-4" /> Дэлгүүр
+              </TabBtn>
+            </div>
+
+            {/* ── History ── */}
+            {tab === "history" && (
+              <div className="mt-4 space-y-2">
+                {data.transactions.length === 0 ? (
+                  <div className="rounded-2xl border border-white/10 bg-white/5 px-6 py-10 text-center">
+                    <p className="text-sm text-blue-100/50">Одоогоор гүйлгээ байхгүй байна.</p>
+                    <p className="mt-1 text-xs text-blue-100/30">Дэлгүүрт QR кодоо үзүүлж оноо цуглуулна уу.</p>
                   </div>
-                  <span className="rounded-full bg-emerald-400/10 px-2 py-0.5 text-xs text-emerald-300">Нээлттэй</span>
+                ) : data.transactions.map((tx) => (
+                  <div key={tx.id} className="flex items-center justify-between rounded-2xl border border-white/10 bg-white/5 px-4 py-3">
+                    <div>
+                      <p className="text-sm font-medium">{tx.description ?? tx.store?.name ?? "Гүйлгээ"}</p>
+                      <p className="mt-0.5 text-xs text-blue-100/50">
+                        {new Date(tx.createdAt).toLocaleString("mn-MN")}
+                        {tx.purchaseAmount ? ` · ${formatMnt(tx.purchaseAmount)}` : ""}
+                      </p>
+                    </div>
+                    <span className={`text-sm font-bold ${tx.type === "REDEEM" ? "text-red-300" : "text-emerald-300"}`}>
+                      {tx.type === "REDEEM" ? "-" : "+"}{formatPoints(tx.points)}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* ── Referral ── */}
+            {tab === "referral" && (
+              <div className="mt-4 space-y-4">
+                <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
+                  <p className="font-semibold">Урилгын код</p>
+                  <p className="mt-1 text-sm text-blue-100/60">
+                    Найзаа урьж тус бүр <span className="font-bold text-abico-gold">+50 оноо</span> авна
+                  </p>
+                  <div className="mt-4 flex items-center justify-between rounded-xl bg-white/10 px-4 py-3">
+                    <code className="font-mono text-xl tracking-widest">{user.referralCode}</code>
+                    <button type="button" onClick={() => copy(user.referralCode)} className="text-abico-light hover:text-white">
+                      <Copy className="h-5 w-5" />
+                    </button>
+                  </div>
+                  {copied && <p className="mt-2 text-center text-xs text-emerald-300">✓ Хуулагдлаа</p>}
+                </div>
+
+                <div className="rounded-2xl border p-5 lg:hidden"
+                  style={{ borderColor: tier.color + "44", background: tier.color + "11" }}>
+                  <div className="mb-3 flex items-center gap-2">
+                    <span className="rounded-full px-2 py-0.5 text-xs font-bold"
+                      style={{ backgroundColor: tier.color + "33", color: tier.color }}>★ {tier.nameMn}</span>
+                    <p className="font-semibold">гишүүний давуу эрх</p>
+                  </div>
+                  <p className="text-3xl font-extrabold" style={{ color: tier.color }}>{tier.discountPercent}%</p>
+                  <p className="text-sm text-blue-100/60">{tier.perks}</p>
+                  {nextTier && (
+                    <p className="mt-3 rounded-xl bg-white/5 px-3 py-2 text-xs text-blue-100/50">
+                      {formatPoints(pointsToNext)} оноо нэмбэл{" "}
+                      <span style={{ color: nextTier.color }}>{nextTier.nameMn}</span>{" "}
+                      ({nextTier.discountPercent}% хөнгөлөлт) болно
+                    </p>
+                  )}
                 </div>
               </div>
-            ))}
+            )}
+
+            {/* ── Stores ── */}
+            {tab === "stores" && (
+              <div className="mt-4 space-y-3">
+                {data.stores.length === 0 ? (
+                  <p className="py-8 text-center text-sm text-blue-100/50">Дэлгүүр бүртгэлгүй байна</p>
+                ) : data.stores.map((s) => (
+                  <div key={s.id} className="rounded-2xl border border-white/10 bg-white/5 px-4 py-4">
+                    <div className="flex items-start justify-between">
+                      <div>
+                        <p className="font-semibold">{s.name}</p>
+                        {s.address && <p className="mt-1 text-sm text-blue-100/60">📍 {s.address}</p>}
+                        {s.phone && <p className="mt-0.5 text-sm text-blue-100/60">📞 {s.phone}</p>}
+                      </div>
+                      <span className="rounded-full bg-emerald-400/10 px-2 py-0.5 text-xs text-emerald-300">Нээлттэй</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
-        )}
+        </div>
       </main>
     </div>
   );

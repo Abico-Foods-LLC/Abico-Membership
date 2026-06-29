@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import {
   Award,
   Bell,
@@ -12,42 +13,169 @@ import { Navbar } from "@/components/Navbar";
 import { MEMBERSHIP_TIERS } from "@/lib/loyalty";
 import { getSession } from "@/lib/auth";
 
+const BRAND_LOGOS = [
+  { src: "/brands/Daiso.png", name: "Daiso" },
+  { src: "/brands/Pigeon.png", name: "Pigeon" },
+  { src: "/brands/LION_logo.png", name: "Lion" },
+  { src: "/brands/KireiKirei.png", name: "KireiKirei" },
+  { src: "/brands/Dydo.png", name: "Dydo" },
+  { src: "/brands/Kagome.png", name: "Kagome" },
+];
+
 export default async function HomePage() {
   const session = await getSession();
 
   return (
     <div className="min-h-screen">
-      <Navbar
-        userName={session?.name}
-        role={session?.role}
-      />
+      <Navbar userName={session?.name} role={session?.role} />
 
       <main>
-        <section className="mx-auto max-w-6xl px-4 py-16 md:py-24">
-          <div className="max-w-3xl">
-            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-abico-sky">
-              ABICO.MN
-            </p>
-            <h1 className="mt-4 text-4xl font-extrabold leading-tight md:text-6xl">
-              Гишүүнчлэлийн
-              <span className="text-abico-gold"> Бонус Систем</span>
-            </h1>
-            <p className="mt-6 max-w-2xl text-lg text-blue-100/80">
-              Олон дэлгүүрт нэг картаар — оноо цуглуулж, бонус авна. QR кодоор
-              хурдан бүртгэл, ажилтан оноо нэмэх, гишүүний шатлал.
-            </p>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <Link href="/register" className="btn-primary">
-                Одоо бүртгүүлэх
-              </Link>
-              <Link href="/login" className="rounded-xl border border-white/20 px-4 py-2.5 text-sm font-semibold hover:bg-white/10">
-                Нэвтрэх
-              </Link>
+        {/* ── Hero ── */}
+        <section className="mx-auto max-w-7xl px-6 py-14 md:py-20">
+          <div className="grid items-center gap-12 lg:grid-cols-2">
+            {/* Left: Text */}
+            <div>
+              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-abico-sky">
+                ABICO.MN
+              </p>
+              <h1 className="mt-4 text-4xl font-extrabold leading-tight md:text-5xl xl:text-6xl">
+                Гишүүнчлэлийн
+                <span className="text-abico-gold"> Бонус Систем</span>
+              </h1>
+              <p className="mt-5 text-lg text-blue-100/80">
+                Олон дэлгүүрт нэг картаар — оноо цуглуулж, бонус авна. QR
+                кодоор хурдан бүртгэл, ажилтан оноо нэмэх, гишүүний шатлал.
+              </p>
+              <div className="mt-7 flex flex-wrap gap-3">
+                <Link href="/register" className="btn-primary px-6 py-3 text-base">
+                  Одоо бүртгүүлэх
+                </Link>
+                <Link
+                  href="/login"
+                  className="rounded-xl border border-white/20 px-6 py-3 text-base font-semibold hover:bg-white/10"
+                >
+                  Нэвтрэх
+                </Link>
+              </div>
+
+              {/* Brand logos strip */}
+              <div className="mt-10">
+                <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-blue-100/40">
+                  Партнер брэндүүд
+                </p>
+                <div className="flex flex-wrap items-center gap-4">
+                  {BRAND_LOGOS.map((b) => (
+                    <div
+                      key={b.name}
+                      className="flex h-10 w-20 items-center justify-center rounded-xl bg-white/10 px-2"
+                    >
+                      <Image
+                        src={b.src}
+                        alt={b.name}
+                        width={64}
+                        height={32}
+                        className="max-h-8 w-auto object-contain"
+                        unoptimized
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Right: Visual card mockup */}
+            <div className="hidden lg:block">
+              <div
+                className="relative overflow-hidden rounded-3xl p-8 shadow-2xl"
+                style={{
+                  background:
+                    "linear-gradient(135deg, #001C3B 0%, #023876 60%, #001C3B 100%)",
+                }}
+              >
+                <div
+                  className="pointer-events-none absolute -right-16 -top-16 h-64 w-64 rounded-full"
+                  style={{
+                    background:
+                      "radial-gradient(circle, rgba(21,114,190,0.3) 0%, transparent 70%)",
+                  }}
+                />
+
+                <div className="relative flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="flex h-8 w-8 items-center justify-center rounded-full bg-abico-blue text-xs font-bold text-white">
+                      A
+                    </span>
+                    <div>
+                      <p className="text-[10px] font-bold tracking-widest text-abico-light">
+                        ABICO
+                      </p>
+                      <p className="text-[10px] text-blue-100/50">
+                        LOYALTY CARD
+                      </p>
+                    </div>
+                  </div>
+                  <span
+                    className="rounded-full border px-3 py-1 text-xs font-bold tracking-wide"
+                    style={{
+                      borderColor: "#f59e0b",
+                      color: "#f59e0b",
+                      backgroundColor: "#f59e0b22",
+                    }}
+                  >
+                    ★ АЛТ
+                  </span>
+                </div>
+
+                <div className="relative mt-6">
+                  <p className="text-sm text-blue-100/60">Нийт оноо</p>
+                  <p className="text-5xl font-extrabold text-abico-gold">
+                    2,450
+                  </p>
+                  <div className="mt-3 h-1.5 w-full overflow-hidden rounded-full bg-white/10">
+                    <div
+                      className="h-full rounded-full"
+                      style={{
+                        width: "49%",
+                        background: "linear-gradient(90deg, #f59e0b, #1572BE)",
+                      }}
+                    />
+                  </div>
+                  <p className="mt-1.5 text-xs text-blue-100/50">
+                    2,550 оноо → ПЛАТИНУМ болно
+                  </p>
+                </div>
+
+                <div className="relative mt-6 grid grid-cols-3 gap-3">
+                  {MEMBERSHIP_TIERS.map((t) => (
+                    <div
+                      key={t.id}
+                      className="rounded-xl border border-white/10 p-3 text-center"
+                    >
+                      <p
+                        className="text-[10px] font-bold uppercase"
+                        style={{ color: t.color }}
+                      >
+                        {t.nameMn}
+                      </p>
+                      <p className="mt-1 text-lg font-extrabold">
+                        {t.discountPercent}%
+                      </p>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="relative mt-5 border-t border-white/10 pt-4 text-center">
+                  <p className="text-[10px] text-blue-100/40">
+                    ABICO-DEMO123 · Дэлгүүрт QR кодоо үзүүлнэ
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         </section>
 
-        <section className="mx-auto max-w-6xl px-4 pb-16">
+        {/* ── Features ── */}
+        <section className="mx-auto max-w-7xl px-6 pb-12">
           <div className="grid gap-4 md:grid-cols-3">
             <FeatureCard
               icon={<QrCode className="h-6 w-6 text-abico-gold" />}
@@ -57,7 +185,7 @@ export default async function HomePage() {
             <FeatureCard
               icon={<Award className="h-6 w-6 text-abico-gold" />}
               title="Шатлал"
-              text="МӨНГӨ → АЛТ → ПЛАТИНУМ → VIP хөнгөлөлт"
+              text="СТАНДАРТ → АЛТ → ПЛАТИНУМ → VIP хөнгөлөлт"
             />
             <FeatureCard
               icon={<Bell className="h-6 w-6 text-abico-gold" />}
@@ -67,16 +195,20 @@ export default async function HomePage() {
           </div>
         </section>
 
-        <section className="border-y border-white/10 bg-white/5 py-16">
-          <div className="mx-auto max-w-6xl px-4">
+        {/* ── Tiers ── */}
+        <section className="border-y border-white/10 bg-white/5 py-12">
+          <div className="mx-auto max-w-7xl px-6">
             <h2 className="text-2xl font-bold">Гишүүний шатлал</h2>
-            <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               {MEMBERSHIP_TIERS.map((tier) => (
                 <div
                   key={tier.id}
                   className="rounded-2xl border border-white/10 bg-abico-navy/40 p-5"
                 >
-                  <p className="text-sm font-bold uppercase tracking-wide" style={{ color: tier.color === "#001C3B" ? "#bfe0f3" : tier.color }}>
+                  <p
+                    className="text-sm font-bold uppercase tracking-wide"
+                    style={{ color: tier.color }}
+                  >
                     {tier.nameMn}
                   </p>
                   <p className="mt-2 text-2xl font-extrabold">
@@ -94,9 +226,10 @@ export default async function HomePage() {
           </div>
         </section>
 
-        <section className="mx-auto max-w-6xl px-4 py-16">
+        {/* ── How it works ── */}
+        <section className="mx-auto max-w-7xl px-6 py-12">
           <h2 className="text-2xl font-bold">Хэрхэн ажилладаг вэ?</h2>
-          <div className="mt-8 grid gap-6 md:grid-cols-3">
+          <div className="mt-6 grid gap-5 md:grid-cols-3">
             <StepCard
               icon={<Users />}
               title="Хэрэглэгч"
@@ -127,7 +260,8 @@ export default async function HomePage() {
           </div>
         </section>
 
-        <section className="mx-auto max-w-6xl px-4 pb-20">
+        {/* ── CTA ── */}
+        <section className="mx-auto max-w-7xl px-6 pb-16">
           <div className="rounded-3xl border border-abico-gold/30 bg-gradient-to-br from-abico-gold/15 to-transparent p-8 md:p-10">
             <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
               <div>
@@ -142,7 +276,7 @@ export default async function HomePage() {
                   оноо нэмэх, удирдлагын самбар багтсан.
                 </p>
               </div>
-              <Link href="/register" className="btn-primary shrink-0">
+              <Link href="/register" className="btn-primary shrink-0 px-8 py-3 text-base">
                 <ShoppingBag className="mr-2 inline h-4 w-4" />
                 Эхлэх
               </Link>
