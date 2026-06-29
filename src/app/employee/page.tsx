@@ -154,7 +154,7 @@ export default function EmployeePage() {
         <div className="mb-8">
           <p className="text-sm uppercase tracking-wider text-abico-gold">Ажилтан</p>
           <h1 className="text-3xl font-bold">Гишүүн хайх</h1>
-          <p className="mt-2 text-blue-100/70">QR код уншиж эсвэл гараар оруулна. ₮1,000 = 1 оноо.</p>
+          <p className="mt-2 text-gray-600">QR код уншиж эсвэл гараар оруулна. ₮1,000 = 1 оноо.</p>
         </div>
 
         <div className="space-y-6">
@@ -166,15 +166,15 @@ export default function EmployeePage() {
             </div>
 
             {/* Mode toggle */}
-            <div className="mb-3 flex rounded-xl border border-white/10 bg-white/5 p-1">
+            <div className="mb-3 flex rounded-xl border border-gray-200 bg-gray-50 p-1">
               <button type="button"
                 onClick={() => setLookupMode("qr")}
-                className={`flex flex-1 items-center justify-center gap-1.5 rounded-lg py-2 text-sm font-medium transition ${lookupMode === "qr" ? "bg-white/10 text-white" : "text-blue-100/50"}`}>
+                className={`flex flex-1 items-center justify-center gap-1.5 rounded-lg py-2 text-sm font-medium transition ${lookupMode === "qr" ? "bg-gray-100 text-white" : "text-gray-400"}`}>
                 <ScanLine className="h-4 w-4" /> QR код
               </button>
               <button type="button"
                 onClick={() => setLookupMode("phone")}
-                className={`flex flex-1 items-center justify-center gap-1.5 rounded-lg py-2 text-sm font-medium transition ${lookupMode === "phone" ? "bg-white/10 text-white" : "text-blue-100/50"}`}>
+                className={`flex flex-1 items-center justify-center gap-1.5 rounded-lg py-2 text-sm font-medium transition ${lookupMode === "phone" ? "bg-gray-100 text-white" : "text-gray-400"}`}>
                 <UserSearch className="h-4 w-4" /> Утасны дугаар
               </button>
             </div>
@@ -185,7 +185,7 @@ export default function EmployeePage() {
                   <div className="mb-4 overflow-hidden rounded-xl border border-abico-gold/40">
                     <video ref={videoRef} className="w-full" playsInline muted />
                     <div className="flex items-center justify-between bg-black/40 px-4 py-2">
-                      <p className="text-sm text-blue-100/70">QR код камер руу чиглүүлнэ...</p>
+                      <p className="text-sm text-gray-600">QR код камер руу чиглүүлнэ...</p>
                       <button type="button" onClick={stopScan} className="flex items-center gap-1 text-sm text-red-300 hover:text-red-200">
                         <CameraOff className="h-4 w-4" /> Зогсоох
                       </button>
@@ -197,7 +197,7 @@ export default function EmployeePage() {
                     value={qrCode}
                     onChange={(e) => setQrCode(e.target.value.toUpperCase())}
                     placeholder="ABICO-XXXXXXXXXXXX"
-                    className="flex-1 rounded-xl border border-white/15 bg-white/10 px-4 py-2.5 font-mono text-sm outline-none focus:ring-2 focus:ring-abico-gold"
+                    className="flex-1 rounded-xl border border-gray-200 bg-gray-100 px-4 py-2.5 font-mono text-sm outline-none focus:ring-2 focus:ring-abico-gold"
                   />
                   <Button type="button" variant="secondary" onClick={() => doLookup(qrCode)} disabled={!qrCode}>
                     Хайх
@@ -206,7 +206,7 @@ export default function EmployeePage() {
                     type="button"
                     onClick={scanning ? stopScan : startScan}
                     title="Камераар скан хийх"
-                    className="flex items-center gap-1 rounded-xl border border-white/15 bg-white/10 px-3 py-2.5 text-sm hover:bg-white/20"
+                    className="flex items-center gap-1 rounded-xl border border-gray-200 bg-gray-100 px-3 py-2.5 text-sm hover:bg-white/20"
                   >
                     <Camera className="h-4 w-4 text-abico-gold" />
                   </button>
@@ -219,7 +219,7 @@ export default function EmployeePage() {
                   onChange={(e) => setPhoneInput(e.target.value)}
                   placeholder="99112233"
                   type="tel"
-                  className="flex-1 rounded-xl border border-white/15 bg-white/10 px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-abico-gold"
+                  className="flex-1 rounded-xl border border-gray-200 bg-gray-100 px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-abico-gold"
                 />
                 <Button type="button" variant="secondary" onClick={() => doLookup(phoneInput, "phone")} disabled={!phoneInput}>
                   Хайх
@@ -232,7 +232,7 @@ export default function EmployeePage() {
                 <div className="flex items-start justify-between">
                   <div>
                     <p className="font-semibold">{member.name}</p>
-                    <p className="text-sm text-blue-100/70">{member.phone}</p>
+                    <p className="text-sm text-gray-600">{member.phone}</p>
                   </div>
                   {tier && (
                     <span className="rounded-full px-3 py-1 text-xs font-bold" style={{ backgroundColor: tier.color + "33", color: tier.color }}>
@@ -242,7 +242,7 @@ export default function EmployeePage() {
                 </div>
                 <p className="mt-2 text-sm">
                   Оноо: <span className="font-bold text-abico-gold">{formatPoints(member.totalPoints)}</span>
-                  {tier && <span className="ml-2 text-blue-100/60">· {tier.discountPercent}% хөнгөлөлт</span>}
+                  {tier && <span className="ml-2 text-gray-500">· {tier.discountPercent}% хөнгөлөлт</span>}
                 </p>
               </div>
             )}
@@ -257,7 +257,7 @@ export default function EmployeePage() {
             </div>
             <form onSubmit={addPoints} className="space-y-4">
               <label className="block">
-                <span className="mb-1 block text-sm text-blue-100/80">Худалдан авалтын дүн (₮)</span>
+                <span className="mb-1 block text-sm text-gray-700">Худалдан авалтын дүн (₮)</span>
                 <input
                   type="number"
                   min="1000"
@@ -266,11 +266,11 @@ export default function EmployeePage() {
                   onChange={(e) => setPurchaseAmount(e.target.value)}
                   placeholder="50000"
                   required
-                  className="w-full rounded-xl border border-white/15 bg-white/10 px-4 py-2.5 outline-none focus:ring-2 focus:ring-abico-gold"
+                  className="w-full rounded-xl border border-gray-200 bg-gray-100 px-4 py-2.5 outline-none focus:ring-2 focus:ring-abico-gold"
                 />
               </label>
               {previewPoints > 0 && (
-                <p className="text-sm text-blue-100/70">
+                <p className="text-sm text-gray-600">
                   Олгох оноо: <span className="font-bold text-abico-gold">{formatPoints(previewPoints)}</span>{" "}
                   ({formatMnt(Number(purchaseAmount))})
                 </p>
@@ -294,7 +294,7 @@ export default function EmployeePage() {
             </div>
             <form onSubmit={redeemPointsFn} className="space-y-4">
               <label className="block">
-                <span className="mb-1 block text-sm text-blue-100/80">Хасах оноо</span>
+                <span className="mb-1 block text-sm text-gray-700">Хасах оноо</span>
                 <input
                   type="number"
                   min="1"
@@ -302,7 +302,7 @@ export default function EmployeePage() {
                   onChange={(e) => setRedeemPoints(e.target.value)}
                   placeholder="100"
                   required
-                  className="w-full rounded-xl border border-white/15 bg-white/10 px-4 py-2.5 outline-none focus:ring-2 focus:ring-abico-gold"
+                  className="w-full rounded-xl border border-gray-200 bg-gray-100 px-4 py-2.5 outline-none focus:ring-2 focus:ring-abico-gold"
                 />
               </label>
               {member && redeemPoints && Number(redeemPoints) > member.totalPoints && (

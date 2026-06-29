@@ -8,7 +8,7 @@ export function Card({
   children: React.ReactNode;
 }) {
   return (
-    <div className={cn("rounded-2xl border border-white/10 bg-white/5 p-6 shadow-card", className)}>
+    <div className={cn("rounded-2xl border border-gray-200 bg-white p-6 shadow-sm", className)}>
       {children}
     </div>
   );

@@ -74,7 +74,7 @@ export default function ProfilePage() {
 
   if (!me) return (
     <div className="min-h-screen"><Navbar loading />
-      <p className="mx-auto mt-20 text-center text-blue-100/60">Ачааллаж байна...</p>
+      <p className="mx-auto mt-20 text-center text-gray-500">Ачааллаж байна...</p>
     </div>
   );
 
@@ -95,29 +95,29 @@ export default function ProfilePage() {
               <h2 className="font-semibold">Хувийн мэдээлэл</h2>
             </div>
 
-            <p className="mb-4 rounded-xl bg-white/5 px-4 py-3 font-mono text-sm text-blue-100/70">
+            <p className="mb-4 rounded-xl bg-gray-50 px-4 py-3 font-mono text-sm text-gray-600">
               📱 {me.phone}
             </p>
 
             <form onSubmit={saveName} className="space-y-4">
               <label className="block">
-                <span className="mb-1 block text-sm text-blue-100/70">Нэр</span>
+                <span className="mb-1 block text-sm text-gray-600">Нэр</span>
                 <input
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   required
                   minLength={2}
-                  className="w-full rounded-xl border border-white/15 bg-white/10 px-4 py-2.5 outline-none focus:ring-2 focus:ring-abico-blue"
+                  className="w-full rounded-xl border border-gray-200 bg-gray-100 px-4 py-2.5 outline-none focus:ring-2 focus:ring-abico-blue"
                 />
               </label>
               <label className="block">
-                <span className="mb-1 block text-sm text-blue-100/70">Имэйл (заавал биш)</span>
+                <span className="mb-1 block text-sm text-gray-600">Имэйл (заавал биш)</span>
                 <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="example@mail.com"
-                  className="w-full rounded-xl border border-white/15 bg-white/10 px-4 py-2.5 outline-none focus:ring-2 focus:ring-abico-blue"
+                  className="w-full rounded-xl border border-gray-200 bg-gray-100 px-4 py-2.5 outline-none focus:ring-2 focus:ring-abico-blue"
                 />
               </label>
               {nameErr && <p className="text-sm text-red-300">{nameErr}</p>}
@@ -140,24 +140,24 @@ export default function ProfilePage() {
             </div>
             <form onSubmit={changePassword} className="space-y-4">
               <label className="block">
-                <span className="mb-1 block text-sm text-blue-100/70">Одоогийн нууц үг</span>
+                <span className="mb-1 block text-sm text-gray-600">Одоогийн нууц үг</span>
                 <input
                   type="password"
                   value={curPwd}
                   onChange={(e) => setCurPwd(e.target.value)}
                   required
-                  className="w-full rounded-xl border border-white/15 bg-white/10 px-4 py-2.5 outline-none focus:ring-2 focus:ring-abico-blue"
+                  className="w-full rounded-xl border border-gray-200 bg-gray-100 px-4 py-2.5 outline-none focus:ring-2 focus:ring-abico-blue"
                 />
               </label>
               <label className="block">
-                <span className="mb-1 block text-sm text-blue-100/70">Шинэ нууц үг</span>
+                <span className="mb-1 block text-sm text-gray-600">Шинэ нууц үг</span>
                 <input
                   type="password"
                   value={newPwd}
                   onChange={(e) => setNewPwd(e.target.value)}
                   required
                   minLength={6}
-                  className="w-full rounded-xl border border-white/15 bg-white/10 px-4 py-2.5 outline-none focus:ring-2 focus:ring-abico-blue"
+                  className="w-full rounded-xl border border-gray-200 bg-gray-100 px-4 py-2.5 outline-none focus:ring-2 focus:ring-abico-blue"
                 />
               </label>
               {pwdErr && <p className="text-sm text-red-300">{pwdErr}</p>}

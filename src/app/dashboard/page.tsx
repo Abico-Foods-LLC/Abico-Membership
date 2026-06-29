@@ -58,7 +58,7 @@ export default function DashboardPage() {
   }
 
   if (error) return <div className="min-h-screen"><Navbar /><p className="mx-auto mt-20 max-w-sm text-center text-red-300">{error}</p></div>;
-  if (!data) return <div className="min-h-screen"><Navbar loading /><p className="mx-auto mt-20 max-w-sm text-center text-blue-100/60">Ачааллаж байна...</p></div>;
+  if (!data) return <div className="min-h-screen"><Navbar loading /><p className="mx-auto mt-20 max-w-sm text-center text-gray-500">Ачааллаж байна...</p></div>;
 
   const { user, points, tier, nextTier, pointsToNext } = data;
   const progressPct = nextTier
@@ -80,7 +80,7 @@ export default function DashboardPage() {
             <QRCode value={user.qrCode} size={260} />
           </div>
           <p className="mt-4 font-mono text-sm text-white/50">{user.qrCode}</p>
-          <button className="mt-8 flex items-center gap-2 rounded-full bg-white/10 px-5 py-2.5 text-sm text-white hover:bg-white/20">
+          <button className="mt-8 flex items-center gap-2 rounded-full bg-gray-100 px-5 py-2.5 text-sm text-white hover:bg-white/20">
             <X className="h-4 w-4" /> Хаах
           </button>
         </div>
@@ -98,9 +98,9 @@ export default function DashboardPage() {
                 <div className="flex-1 text-sm">
                   <span className="font-bold text-abico-gold">{p.multiplier}x оноо</span>
                   {" — "}{p.title}
-                  {p.store && <span className="text-blue-100/60"> · {p.store.name}</span>}
+                  {p.store && <span className="text-gray-500"> · {p.store.name}</span>}
                 </div>
-                <span className="text-xs text-blue-100/50">
+                <span className="text-xs text-gray-400">
                   {new Date(p.endsAt).toLocaleDateString("mn-MN")} хүртэл
                 </span>
               </div>
@@ -125,7 +125,7 @@ export default function DashboardPage() {
                   <span className="flex h-9 w-9 items-center justify-center rounded-full bg-abico-blue text-sm font-bold text-white">A</span>
                   <div>
                     <p className="text-xs font-bold tracking-widest text-abico-light">ABICO</p>
-                    <p className="text-xs text-blue-100/50">LOYALTY CARD</p>
+                    <p className="text-xs text-white/50">LOYALTY CARD</p>
                   </div>
                 </div>
                 <span className="rounded-full border px-3 py-1 text-xs font-bold tracking-wide"
@@ -137,10 +137,10 @@ export default function DashboardPage() {
               {/* Name + points left, QR right */}
               <div className="relative mt-6 flex gap-6">
                 <div className="flex-1">
-                  <p className="text-sm text-blue-100/60">Гишүүний нэр</p>
-                  <p className="mt-0.5 text-2xl font-bold">{user.name}</p>
+                  <p className="text-sm text-white/60">Гишүүний нэр</p>
+                  <p className="mt-0.5 text-2xl font-bold text-white">{user.name}</p>
                   <div className="mt-4">
-                    <p className="text-sm text-blue-100/60">Нийт оноо</p>
+                    <p className="text-sm text-white/60">Нийт оноо</p>
                     <p className="text-4xl font-extrabold text-abico-gold">{formatPoints(points)}</p>
                   </div>
                   {nextTier && (
@@ -149,13 +149,13 @@ export default function DashboardPage() {
                         <div className="h-full rounded-full"
                           style={{ width: `${progressPct}%`, background: `linear-gradient(90deg, ${tier.color}, #1572BE)` }} />
                       </div>
-                      <p className="mt-1.5 text-xs text-blue-100/50">
+                      <p className="mt-1.5 text-xs text-white/50">
                         {formatPoints(pointsToNext)} оноо → <span style={{ color: nextTier.color }}>{nextTier.nameMn}</span>
                       </p>
                     </div>
                   )}
                   <div className="mt-5 inline-flex items-center gap-2 rounded-xl bg-white/10 px-3 py-2">
-                    <span className="text-xs text-blue-100/60">Хөнгөлөлт</span>
+                    <span className="text-xs text-white/60">Хөнгөлөлт</span>
                     <span className="text-lg font-extrabold" style={{ color: tier.color }}>{tier.discountPercent}%</span>
                   </div>
                 </div>
@@ -167,12 +167,12 @@ export default function DashboardPage() {
                   <div className="rounded-2xl bg-white p-3 shadow-xl">
                     <QRCode value={user.qrCode} size={110} />
                   </div>
-                  <p className="mt-1.5 text-center text-[10px] text-blue-100/40">Дарж томруулах</p>
+                  <p className="mt-1.5 text-center text-[10px] text-white/40">Дарж томруулах</p>
                 </button>
               </div>
 
               <div className="relative mt-6 border-t border-white/10 pt-4">
-                <p className="text-center text-xs text-blue-100/40">
+                <p className="text-center text-xs text-white/40">
                   {user.qrCode} · Дэлгүүрт QR кодоо үзүүлж оноо цуглуулна
                 </p>
               </div>
@@ -187,9 +187,9 @@ export default function DashboardPage() {
                 <p className="font-semibold">гишүүний давуу эрх</p>
               </div>
               <p className="text-3xl font-extrabold" style={{ color: tier.color }}>{tier.discountPercent}%</p>
-              <p className="text-sm text-blue-100/60">{tier.perks}</p>
+              <p className="text-sm text-gray-500">{tier.perks}</p>
               {nextTier && (
-                <p className="mt-3 rounded-xl bg-white/5 px-3 py-2 text-xs text-blue-100/50">
+                <p className="mt-3 rounded-xl bg-gray-50 px-3 py-2 text-xs text-gray-400">
                   {formatPoints(pointsToNext)} оноо нэмбэл{" "}
                   <span style={{ color: nextTier.color }}>{nextTier.nameMn}</span>{" "}
                   ({nextTier.discountPercent}% хөнгөлөлт) болно
@@ -200,7 +200,7 @@ export default function DashboardPage() {
 
           {/* ── Right: Tabs ── */}
           <div>
-            <div className="flex rounded-2xl border border-white/10 bg-white/5 p-1">
+            <div className="flex rounded-2xl border border-gray-200 bg-gray-50 p-1">
               <TabBtn active={tab === "history"} onClick={() => setTab("history")}>
                 <History className="h-4 w-4" /> Түүх
               </TabBtn>
@@ -216,15 +216,15 @@ export default function DashboardPage() {
             {tab === "history" && (
               <div className="mt-4 space-y-2">
                 {data.transactions.length === 0 ? (
-                  <div className="rounded-2xl border border-white/10 bg-white/5 px-6 py-10 text-center">
-                    <p className="text-sm text-blue-100/50">Одоогоор гүйлгээ байхгүй байна.</p>
-                    <p className="mt-1 text-xs text-blue-100/30">Дэлгүүрт QR кодоо үзүүлж оноо цуглуулна уу.</p>
+                  <div className="rounded-2xl border border-gray-200 bg-gray-50 px-6 py-10 text-center">
+                    <p className="text-sm text-gray-400">Одоогоор гүйлгээ байхгүй байна.</p>
+                    <p className="mt-1 text-xs text-gray-300">Дэлгүүрт QR кодоо үзүүлж оноо цуглуулна уу.</p>
                   </div>
                 ) : data.transactions.map((tx) => (
-                  <div key={tx.id} className="flex items-center justify-between rounded-2xl border border-white/10 bg-white/5 px-4 py-3">
+                  <div key={tx.id} className="flex items-center justify-between rounded-2xl border border-gray-200 bg-gray-50 px-4 py-3">
                     <div>
                       <p className="text-sm font-medium">{tx.description ?? tx.store?.name ?? "Гүйлгээ"}</p>
-                      <p className="mt-0.5 text-xs text-blue-100/50">
+                      <p className="mt-0.5 text-xs text-gray-400">
                         {new Date(tx.createdAt).toLocaleString("mn-MN")}
                         {tx.purchaseAmount ? ` · ${formatMnt(tx.purchaseAmount)}` : ""}
                       </p>
@@ -240,12 +240,12 @@ export default function DashboardPage() {
             {/* ── Referral ── */}
             {tab === "referral" && (
               <div className="mt-4 space-y-4">
-                <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
+                <div className="rounded-2xl border border-gray-200 bg-gray-50 p-5">
                   <p className="font-semibold">Урилгын код</p>
-                  <p className="mt-1 text-sm text-blue-100/60">
+                  <p className="mt-1 text-sm text-gray-500">
                     Найзаа урьж тус бүр <span className="font-bold text-abico-gold">+50 оноо</span> авна
                   </p>
-                  <div className="mt-4 flex items-center justify-between rounded-xl bg-white/10 px-4 py-3">
+                  <div className="mt-4 flex items-center justify-between rounded-xl bg-gray-100 px-4 py-3">
                     <code className="font-mono text-xl tracking-widest">{user.referralCode}</code>
                     <button type="button" onClick={() => copy(user.referralCode)} className="text-abico-light hover:text-white">
                       <Copy className="h-5 w-5" />
@@ -262,9 +262,9 @@ export default function DashboardPage() {
                     <p className="font-semibold">гишүүний давуу эрх</p>
                   </div>
                   <p className="text-3xl font-extrabold" style={{ color: tier.color }}>{tier.discountPercent}%</p>
-                  <p className="text-sm text-blue-100/60">{tier.perks}</p>
+                  <p className="text-sm text-gray-500">{tier.perks}</p>
                   {nextTier && (
-                    <p className="mt-3 rounded-xl bg-white/5 px-3 py-2 text-xs text-blue-100/50">
+                    <p className="mt-3 rounded-xl bg-gray-50 px-3 py-2 text-xs text-gray-400">
                       {formatPoints(pointsToNext)} оноо нэмбэл{" "}
                       <span style={{ color: nextTier.color }}>{nextTier.nameMn}</span>{" "}
                       ({nextTier.discountPercent}% хөнгөлөлт) болно
@@ -278,14 +278,14 @@ export default function DashboardPage() {
             {tab === "stores" && (
               <div className="mt-4 space-y-3">
                 {data.stores.length === 0 ? (
-                  <p className="py-8 text-center text-sm text-blue-100/50">Дэлгүүр бүртгэлгүй байна</p>
+                  <p className="py-8 text-center text-sm text-gray-400">Дэлгүүр бүртгэлгүй байна</p>
                 ) : data.stores.map((s) => (
-                  <div key={s.id} className="rounded-2xl border border-white/10 bg-white/5 px-4 py-4">
+                  <div key={s.id} className="rounded-2xl border border-gray-200 bg-gray-50 px-4 py-4">
                     <div className="flex items-start justify-between">
                       <div>
                         <p className="font-semibold">{s.name}</p>
-                        {s.address && <p className="mt-1 text-sm text-blue-100/60">📍 {s.address}</p>}
-                        {s.phone && <p className="mt-0.5 text-sm text-blue-100/60">📞 {s.phone}</p>}
+                        {s.address && <p className="mt-1 text-sm text-gray-500">📍 {s.address}</p>}
+                        {s.phone && <p className="mt-0.5 text-sm text-gray-500">📞 {s.phone}</p>}
                       </div>
                       <span className="rounded-full bg-emerald-400/10 px-2 py-0.5 text-xs text-emerald-300">Нээлттэй</span>
                     </div>
@@ -306,7 +306,7 @@ function TabBtn({ active, onClick, children }: {
   return (
     <button type="button" onClick={onClick}
       className={`flex flex-1 items-center justify-center gap-1.5 rounded-xl py-2.5 text-sm font-medium transition ${
-        active ? "bg-white/10 text-white" : "text-blue-100/50 hover:text-blue-100/80"
+        active ? "bg-gray-100 text-white" : "text-gray-400 hover:text-gray-700"
       }`}>
       {children}
     </button>

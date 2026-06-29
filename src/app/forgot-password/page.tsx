@@ -41,7 +41,7 @@ export default function ForgotPasswordPage() {
                 <span className="text-2xl">✉️</span>
               </div>
               <h1 className="text-xl font-bold">Имэйл илгээгдлээ</h1>
-              <p className="mt-2 text-sm text-blue-100/70">
+              <p className="mt-2 text-sm text-gray-600">
                 <span className="font-semibold text-white">{email}</span> хаяг руу нууц үг сэргээх линк илгээгдлээ.
                 Спам хавтсыг шалгана уу.
               </p>
@@ -52,19 +52,19 @@ export default function ForgotPasswordPage() {
           ) : (
             <>
               <h1 className="text-2xl font-bold">Нууц үг мартсан?</h1>
-              <p className="mt-2 text-sm text-blue-100/70">
+              <p className="mt-2 text-sm text-gray-600">
                 Бүртгэлтэй имэйлээ оруулна уу — нууц үг сэргээх линк илгээнэ.
               </p>
               <form onSubmit={handleSubmit} className="mt-6 space-y-4">
                 <label className="block">
-                  <span className="mb-1 block text-sm text-blue-100/80">Имэйл хаяг</span>
+                  <span className="mb-1 block text-sm text-gray-700">Имэйл хаяг</span>
                   <input
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="example@mail.com"
                     required
-                    className="w-full rounded-xl border border-white/15 bg-white/10 px-4 py-2.5 text-white outline-none focus:ring-2 focus:ring-abico-blue"
+                    className="w-full rounded-xl border border-gray-200 bg-gray-100 px-4 py-2.5 text-white outline-none focus:ring-2 focus:ring-abico-blue"
                   />
                 </label>
                 {error && <p className="text-sm text-red-300">{error}</p>}
@@ -72,7 +72,7 @@ export default function ForgotPasswordPage() {
                   {loading ? "Илгээж байна..." : "Линк илгээх"}
                 </Button>
               </form>
-              <p className="mt-4 text-center text-sm text-blue-100/70">
+              <p className="mt-4 text-center text-sm text-gray-600">
                 <Link href="/login" className="text-abico-light hover:underline">
                   Нэвтрэх хуудас руу буцах
                 </Link>

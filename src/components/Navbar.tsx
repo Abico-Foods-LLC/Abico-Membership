@@ -5,18 +5,18 @@ import { LogoutButton } from "@/components/LogoutButton";
 
 export function Navbar({ userName, role, loading }: { userName?: string; role?: string; loading?: boolean }) {
   return (
-    <header className="border-b border-white/10 bg-abico-navy/95 backdrop-blur">
-      <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4">
+    <header className="border-b border-gray-200 bg-white shadow-sm">
+      <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-3">
         <Link href="/" className="flex items-center">
-          <Image src="/abico-logo.png" alt="Abico" width={157} height={44} priority />
+          <Image src="/abico-logo-dark.png" alt="Abico" width={157} height={44} priority />
         </Link>
 
-        <nav className="flex items-center gap-3 text-sm">
+        <nav className="flex items-center gap-2 text-sm">
           {loading ? (
-            <span className="h-5 w-24 animate-pulse rounded-lg bg-white/10" />
+            <span className="h-5 w-24 animate-pulse rounded-lg bg-gray-200" />
           ) : userName ? (
             <>
-              <span className="hidden text-blue-100/80 sm:inline">{userName}</span>
+              <span className="hidden text-gray-600 sm:inline">{userName}</span>
               {role === "EMPLOYEE" || role === "STORE_ADMIN" ? (
                 <Link href="/employee" className="nav-link">Ажилтан</Link>
               ) : null}

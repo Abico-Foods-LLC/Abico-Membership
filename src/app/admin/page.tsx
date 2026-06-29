@@ -67,7 +67,7 @@ export default function AdminPage() {
         </div>
 
         {error && <p className="text-red-300">{error}</p>}
-        {!data && !error && <p className="text-blue-100/70">Ачааллаж байна...</p>}
+        {!data && !error && <p className="text-gray-600">Ачааллаж байна...</p>}
 
         {data && (
           <>
@@ -84,10 +84,10 @@ export default function AdminPage() {
                 <h2 className="mb-3 text-lg font-semibold">Сүүлийн гүйлгээ</h2>
                 <div className="space-y-2">
                   {data.recentTransactions.map((tx) => (
-                    <div key={tx.id} className="flex items-center justify-between rounded-xl border border-white/10 px-3 py-2">
+                    <div key={tx.id} className="flex items-center justify-between rounded-xl border border-gray-200 px-3 py-2">
                       <div>
                         <p className="font-medium">{tx.user.name}</p>
-                        <p className="text-xs text-blue-100/60">
+                        <p className="text-xs text-gray-500">
                           {tx.store?.name ?? "—"} · {new Date(tx.createdAt).toLocaleString("mn-MN")}
                         </p>
                       </div>
@@ -116,7 +116,7 @@ export default function AdminPage() {
 function StatCard({ icon, label, value }: { icon: React.ReactNode; label: string; value: string }) {
   return (
     <Card>
-      <div className="flex items-center gap-2 text-abico-gold">{icon}</div>
+      <div className="flex items-center gap-2 text-abico-blue">{icon}</div>
       <p className="stat-label mt-3">{label}</p>
       <p className="stat-value mt-1">{value}</p>
     </Card>
@@ -150,14 +150,14 @@ function StoresSection({ stores, onRefresh }: { stores: StoreItem[]; onRefresh: 
     <Card>
       <div className="mb-4 flex items-center justify-between">
         <h2 className="text-lg font-semibold">Партнер дэлгүүрүүд</h2>
-        <button type="button" onClick={() => setOpen(!open)} className="flex items-center gap-1 text-sm text-abico-gold hover:text-white">
+        <button type="button" onClick={() => setOpen(!open)} className="flex items-center gap-1 text-sm text-abico-blue hover:text-abico-dark">
           {open ? <X className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
           {open ? "Болих" : "Нэмэх"}
         </button>
       </div>
 
       {open && (
-        <form onSubmit={submit} className="mb-4 space-y-3 rounded-xl border border-white/10 p-4">
+        <form onSubmit={submit} className="mb-4 space-y-3 rounded-xl border border-gray-200 p-4">
           <Input label="Нэр" value={form.name} onChange={(v) => setForm({ ...form, name: v })} required />
           <Input label="Хаяг" value={form.address} onChange={(v) => setForm({ ...form, address: v })} />
           <Input label="Утас" value={form.phone} onChange={(v) => setForm({ ...form, phone: v })} />
@@ -170,9 +170,9 @@ function StoresSection({ stores, onRefresh }: { stores: StoreItem[]; onRefresh: 
 
       <div className="space-y-3">
         {stores.map((store) => (
-          <div key={store.id} className="rounded-xl border border-white/10 px-4 py-3">
+          <div key={store.id} className="rounded-xl border border-gray-200 px-4 py-3">
             <p className="font-medium">{store.name}</p>
-            <p className="text-sm text-blue-100/60">{store.address ?? store.slug}</p>
+            <p className="text-sm text-gray-500">{store.address ?? store.slug}</p>
           </div>
         ))}
       </div>
@@ -215,35 +215,35 @@ function EmployeesSection({
     <Card>
       <div className="mb-4 flex items-center justify-between">
         <h2 className="text-lg font-semibold">Ажилтнууд</h2>
-        <button type="button" onClick={() => setOpen(!open)} className="flex items-center gap-1 text-sm text-abico-gold hover:text-white">
+        <button type="button" onClick={() => setOpen(!open)} className="flex items-center gap-1 text-sm text-abico-blue hover:text-abico-dark">
           {open ? <X className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
           {open ? "Болих" : "Нэмэх"}
         </button>
       </div>
 
       {open && (
-        <form onSubmit={submit} className="mb-4 space-y-3 rounded-xl border border-white/10 p-4">
+        <form onSubmit={submit} className="mb-4 space-y-3 rounded-xl border border-gray-200 p-4">
           <Input label="Нэр" value={form.name} onChange={(v) => setForm({ ...form, name: v })} required />
           <Input label="Утасны дугаар" value={form.phone} onChange={(v) => setForm({ ...form, phone: v })} required />
           <Input label="Нууц үг" type="password" value={form.password} onChange={(v) => setForm({ ...form, password: v })} required />
           <div>
-            <label className="mb-1 block text-sm text-blue-100/80">Дэлгүүр</label>
+            <label className="mb-1 block text-sm text-gray-700">Дэлгүүр</label>
             <select
               required
               value={form.storeId}
               onChange={(e) => setForm({ ...form, storeId: e.target.value })}
-              className="w-full rounded-xl border border-white/15 bg-[#001c3b] px-4 py-2.5 text-white outline-none focus:ring-2 focus:ring-abico-blue"
+              className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-2.5 text-gray-900 outline-none focus:ring-2 focus:ring-abico-blue"
             >
               <option value="">— Сонгох —</option>
               {stores.map((s) => <option key={s.id} value={s.id}>{s.name}</option>)}
             </select>
           </div>
           <div>
-            <label className="mb-1 block text-sm text-blue-100/80">Эрх</label>
+            <label className="mb-1 block text-sm text-gray-700">Эрх</label>
             <select
               value={form.role}
               onChange={(e) => setForm({ ...form, role: e.target.value })}
-              className="w-full rounded-xl border border-white/15 bg-[#001c3b] px-4 py-2.5 text-white outline-none focus:ring-2 focus:ring-abico-blue"
+              className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-2.5 text-gray-900 outline-none focus:ring-2 focus:ring-abico-blue"
             >
               <option value="EMPLOYEE">Ажилтан (Кассчин)</option>
               <option value="STORE_ADMIN">Дэлгүүрийн Админ</option>
@@ -258,9 +258,9 @@ function EmployeesSection({
 
       <div className="grid gap-3 sm:grid-cols-2">
         {employees.map((emp) => (
-          <div key={emp.id} className="rounded-xl border border-white/10 px-4 py-3">
+          <div key={emp.id} className="rounded-xl border border-gray-200 px-4 py-3">
             <p className="font-medium">{emp.name}</p>
-            <p className="text-sm text-blue-100/60">{emp.store?.name ?? "—"} · {emp.role === "EMPLOYEE" ? "Кассчин" : "Дэлгүүр Админ"}</p>
+            <p className="text-sm text-gray-500">{emp.store?.name ?? "—"} · {emp.role === "EMPLOYEE" ? "Кассчин" : "Дэлгүүр Админ"}</p>
           </div>
         ))}
       </div>
@@ -325,32 +325,32 @@ function PromotionsSection({
           <Tag className="h-5 w-5 text-abico-gold" />
           <h2 className="text-lg font-semibold">Урамшуулал</h2>
         </div>
-        <button type="button" onClick={() => setOpen(!open)} className="flex items-center gap-1 text-sm text-abico-gold hover:text-white">
+        <button type="button" onClick={() => setOpen(!open)} className="flex items-center gap-1 text-sm text-abico-blue hover:text-abico-dark">
           {open ? <X className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
           {open ? "Болих" : "Нэмэх"}
         </button>
       </div>
 
       {open && (
-        <form onSubmit={submit} className="mb-4 space-y-3 rounded-xl border border-white/10 p-4">
+        <form onSubmit={submit} className="mb-4 space-y-3 rounded-xl border border-gray-200 p-4">
           <Input label="Гарчиг" value={form.title} onChange={(v) => setForm({ ...form, title: v })} required />
           <div>
-            <label className="mb-1 block text-sm text-blue-100/80">Дэлгүүр (хоосон = бүгд)</label>
+            <label className="mb-1 block text-sm text-gray-700">Дэлгүүр (хоосон = бүгд)</label>
             <select
               value={form.storeId}
               onChange={(e) => setForm({ ...form, storeId: e.target.value })}
-              className="w-full rounded-xl border border-white/15 bg-[#001c3b] px-4 py-2.5 text-white outline-none focus:ring-2 focus:ring-abico-blue"
+              className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-2.5 text-gray-900 outline-none focus:ring-2 focus:ring-abico-blue"
             >
               <option value="">— Бүх дэлгүүр —</option>
               {stores.map((s) => <option key={s.id} value={s.id}>{s.name}</option>)}
             </select>
           </div>
           <div>
-            <label className="mb-1 block text-sm text-blue-100/80">Үржвэр</label>
+            <label className="mb-1 block text-sm text-gray-700">Үржвэр</label>
             <select
               value={form.multiplier}
               onChange={(e) => setForm({ ...form, multiplier: e.target.value })}
-              className="w-full rounded-xl border border-white/15 bg-[#001c3b] px-4 py-2.5 text-white outline-none focus:ring-2 focus:ring-abico-blue"
+              className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-2.5 text-gray-900 outline-none focus:ring-2 focus:ring-abico-blue"
             >
               <option value="2">2x оноо</option>
               <option value="3">3x оноо</option>
@@ -359,23 +359,23 @@ function PromotionsSection({
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="mb-1 block text-sm text-blue-100/80">Эхлэх огноо</label>
+              <label className="mb-1 block text-sm text-gray-700">Эхлэх огноо</label>
               <input
                 type="datetime-local"
                 required
                 value={form.startsAt}
                 onChange={(e) => setForm({ ...form, startsAt: e.target.value })}
-                className="w-full rounded-xl border border-white/15 bg-[#001c3b] px-4 py-2.5 text-white outline-none focus:ring-2 focus:ring-abico-blue"
+                className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-2.5 text-gray-900 outline-none focus:ring-2 focus:ring-abico-blue"
               />
             </div>
             <div>
-              <label className="mb-1 block text-sm text-blue-100/80">Дуусах огноо</label>
+              <label className="mb-1 block text-sm text-gray-700">Дуусах огноо</label>
               <input
                 type="datetime-local"
                 required
                 value={form.endsAt}
                 onChange={(e) => setForm({ ...form, endsAt: e.target.value })}
-                className="w-full rounded-xl border border-white/15 bg-[#001c3b] px-4 py-2.5 text-white outline-none focus:ring-2 focus:ring-abico-blue"
+                className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-2.5 text-gray-900 outline-none focus:ring-2 focus:ring-abico-blue"
               />
             </div>
           </div>
@@ -387,16 +387,16 @@ function PromotionsSection({
       )}
 
       <div className="space-y-3">
-        {promotions.length === 0 && <p className="text-sm text-blue-100/60">Урамшуулал байхгүй байна</p>}
+        {promotions.length === 0 && <p className="text-sm text-gray-500">Урамшуулал байхгүй байна</p>}
         {promotions.map((p) => {
           const active = p.isActive && new Date(p.startsAt) <= now && new Date(p.endsAt) >= now;
           return (
-            <div key={p.id} className={`flex items-start justify-between rounded-xl border px-4 py-3 ${active ? "border-abico-gold/40 bg-abico-gold/5" : "border-white/10"}`}>
+            <div key={p.id} className={`flex items-start justify-between rounded-xl border px-4 py-3 ${active ? "border-abico-blue/20 bg-abico-blue/5" : "border-gray-200"}`}>
               <div>
                 <p className="font-medium">{p.title}</p>
-                <p className="text-sm text-blue-100/60">
+                <p className="text-sm text-gray-500">
                   {p.store?.name ?? "Бүх дэлгүүр"} · {p.multiplier}x ·{" "}
-                  {active ? <span className="text-emerald-300">Идэвхтэй</span> : <span className="text-blue-100/40">Дууссан</span>}
+                  {active ? <span className="text-emerald-300">Идэвхтэй</span> : <span className="text-gray-300">Дууссан</span>}
                 </p>
               </div>
               {p.isActive && (
@@ -451,22 +451,22 @@ function MembersSection() {
         <div className="flex items-center gap-2">
           <Users className="h-5 w-5 text-abico-gold" />
           <h2 className="text-lg font-semibold">Гишүүд</h2>
-          {!loading && <span className="text-sm text-blue-100/50">({members.length})</span>}
+          {!loading && <span className="text-sm text-gray-400">({members.length})</span>}
         </div>
         <input
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Нэр эсвэл утасны дугаараар хайх..."
-          className="w-64 rounded-xl border border-white/15 bg-[#001c3b] px-4 py-2 text-sm text-white outline-none focus:ring-2 focus:ring-abico-blue"
+          className="w-64 rounded-xl border border-gray-200 bg-gray-50 px-4 py-2 text-sm text-gray-900 outline-none focus:ring-2 focus:ring-abico-blue"
         />
       </div>
 
-      {loading && <p className="text-sm text-blue-100/60">Ачааллаж байна...</p>}
+      {loading && <p className="text-sm text-gray-500">Ачааллаж байна...</p>}
 
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b border-white/10 text-left text-xs uppercase tracking-wider text-blue-100/50">
+            <tr className="border-b border-gray-200 text-left text-xs uppercase tracking-wider text-gray-400">
               <th className="pb-3 pr-4">Нэр</th>
               <th className="pb-3 pr-4">Утас</th>
               <th className="pb-3 pr-4">Оноо</th>
@@ -478,16 +478,16 @@ function MembersSection() {
             {members.map((m) => (
               <tr key={m.id}>
                 <td className="py-3 pr-4 font-medium">{m.name}</td>
-                <td className="py-3 pr-4 font-mono text-blue-100/70">{m.phone}</td>
+                <td className="py-3 pr-4 font-mono text-gray-600">{m.phone}</td>
                 <td className="py-3 pr-4 font-bold text-abico-gold">{formatPoints(m.points)}</td>
                 <td className="py-3 pr-4">
-                  <span className="rounded-full bg-white/10 px-2 py-0.5 text-xs">{m.tier}</span>
+                  <span className="rounded-full bg-gray-100 px-2 py-0.5 text-xs">{m.tier}</span>
                 </td>
-                <td className="py-3 text-blue-100/50">{new Date(m.createdAt).toLocaleDateString("mn-MN")}</td>
+                <td className="py-3 text-gray-400">{new Date(m.createdAt).toLocaleDateString("mn-MN")}</td>
               </tr>
             ))}
             {!loading && members.length === 0 && (
-              <tr><td colSpan={5} className="py-6 text-center text-blue-100/40">Гишүүн олдсонгүй</td></tr>
+              <tr><td colSpan={5} className="py-6 text-center text-gray-300">Гишүүн олдсонгүй</td></tr>
             )}
           </tbody>
         </table>
@@ -511,13 +511,13 @@ function Input({
 }) {
   return (
     <label className="block">
-      <span className="mb-1 block text-sm text-blue-100/80">{label}</span>
+      <span className="mb-1 block text-sm text-gray-700">{label}</span>
       <input
         type={type}
         value={value}
         onChange={(e) => onChange(e.target.value)}
         required={required}
-        className="w-full rounded-xl border border-white/15 bg-[#001c3b] px-4 py-2.5 text-white outline-none focus:ring-2 focus:ring-abico-blue"
+        className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-2.5 text-gray-900 outline-none focus:ring-2 focus:ring-abico-blue"
       />
     </label>
   );

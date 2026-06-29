@@ -55,10 +55,10 @@ export function AuthForm({ mode }: { mode: "login" | "register" }) {
 
   return (
     <Card className="mx-auto max-w-md">
-      <h1 className="text-2xl font-bold text-white">
+      <h1 className="text-2xl font-bold text-gray-900">
         {mode === "login" ? "Нэвтрэх" : "Гишүүнчлэлд бүртгүүлэх"}
       </h1>
-      <p className="mt-2 text-sm text-blue-100/70">
+      <p className="mt-2 text-sm text-gray-600">
         {mode === "login"
           ? "Утасны дугаар, нууц үгээр нэвтэрнэ үү"
           : "Нэг карт — олон дэлгүүрт оноо цуглуулна"}
@@ -94,28 +94,28 @@ export function AuthForm({ mode }: { mode: "login" | "register" }) {
             onChange={(v) => setForm({ ...form, referralCode: v })}
           />
         )}
-        {error && <p className="text-sm text-red-300">{error}</p>}
+        {error && <p className="text-sm text-red-500">{error}</p>}
         <Button type="submit" className="w-full" disabled={loading}>
           {loading ? "Түр хүлээнэ үү..." : mode === "login" ? "Нэвтрэх" : "Бүртгүүлэх"}
         </Button>
       </form>
 
-      <p className="mt-4 text-center text-sm text-blue-100/70">
+      <p className="mt-4 text-center text-sm text-gray-600">
         {mode === "login" ? (
           <>
             Бүртгэл байхгүй юу?{" "}
-            <Link href="/register" className="text-abico-light hover:underline">
+            <Link href="/register" className="text-abico-blue hover:underline">
               Бүртгүүлэх
             </Link>
             <span className="mx-2">·</span>
-            <Link href="/forgot-password" className="text-abico-light hover:underline">
+            <Link href="/forgot-password" className="text-abico-blue hover:underline">
               Нууц үг мартсан?
             </Link>
           </>
         ) : (
           <>
             Аль хэдийн бүртгэлтэй юу?{" "}
-            <Link href="/login" className="text-abico-light hover:underline">
+            <Link href="/login" className="text-abico-blue hover:underline">
               Нэвтрэх
             </Link>
           </>
@@ -142,14 +142,14 @@ function Field({
 }) {
   return (
     <label className="block">
-      <span className="mb-1 block text-sm text-blue-100/80">{label}</span>
+      <span className="mb-1 block text-sm text-gray-700">{label}</span>
       <input
         type={type}
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
         required={required}
-        className="w-full rounded-xl border border-white/15 bg-white/10 px-4 py-2.5 text-white outline-none ring-abico-gold placeholder:text-white/30 focus:ring-2"
+        className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-2.5 text-gray-900 outline-none placeholder:text-gray-400 focus:ring-2 focus:ring-abico-blue"
       />
     </label>
   );
