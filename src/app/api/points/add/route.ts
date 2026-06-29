@@ -1,0 +1,123 @@
+import { z } from "zod";
+import { requireRole } from "@/lib/auth";
+import { db } from "@/lib/db";
+import { calculatePointsFromPurchase } from "@/lib/loyalty";
+import { apiError, apiSuccess } from "@/lib/utils";
+
+const addPointsSchema = z.object({
+  qrCode: z.string().min(5),
+  purchaseAmount: z.number().int().positive("Худалдан авалтын дүн 0-ээс их байх ёстой"),
+  description: z.string().optional(),
+});
+
+export async function POST(request: Request) {
+  try {
+    const session = await requireRole(["EMPLOYEE", "STORE_ADMIN", "PLATFORM_ADMIN"]);
+    const employee = await db.user.findUnique({ where: { id: session.userId } });
+    if (!employee?.storeId) return apiError("Дэлгүүрт холбогдоогүй ажилтан", 403);
+
+    const body = addPointsSchema.parse(await request.json());
+    const member = await db.user.findUnique({ where: { qrCode: body.qrCode.toUpperCase() } });
+    if (!member) return apiError("QR код олдсонгүй", 404);
+    if (member.role !== "MEMBER") return apiError("Зөвхөн гишүүнд оноо нэмнэ", 400);
+
+    const now = new Date();
+    const promotion = await db.promotion.findFirst({
+      where: {
+        isActive: true,
+        startsAt: { lte: now },
+        endsAt: { gte: now },
+        OR: [{ storeId: employee.storeId }, { storeId: null }],
+      },
+      orderBy: { multiplier: "desc" },
+    });
+
+    const multiplier = promotion?.multiplier ?? 1;
+    const points = calculatePointsFromPurchase(body.purchaseAmount, multiplier);
+    if (points <= 0) {
+      return apiError(`Хамгийн багадаа ₮1,000 худалдан авалт шаардлагатай`, 400);
+    }
+
+    const transaction = await db.pointTransaction.create({
+      data: {
+        userId: member.id,
+        storeId: employee.storeId,
+        employeeId: employee.id,
+        type: "EARN",
+        points,
+        purchaseAmount: body.purchaseAmount,
+        multiplier,
+        description:
+          body.description ??
+          (promotion
+            ? `${promotion.title} (${multiplier}x)`
+            : "Худалдан авалтын оноо"),
+      },
+      include: {
+        store: { select: { name: true } },
+        user: { select: { name: true, phone: true } },
+      },
+    });
+
+    return apiSuccess({
+      transaction,
+      pointsAdded: points,
+      multiplier,
+      promotion: promotion?.title ?? null,
+    });
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return apiError(error.issues[0]?.message ?? "Буруу өгөгдөл", 400);
+    }
+    if (error instanceof Error && error.message === "UNAUTHORIZED") {
+      return apiError("Нэвтрээгүй", 401);
+    }
+    if (error instanceof Error && error.message === "FORBIDDEN") {
+      return apiError("Эрх хүрэхгүй", 403);
+    }
+    console.error(error);
+    return apiError("Оноо нэмэх амжилтгүй", 500);
+  }
+}
+
+export async function GET(request: Request) {
+  try {
+    const session = await requireRole(["EMPLOYEE", "STORE_ADMIN", "PLATFORM_ADMIN"]);
+    const { searchParams } = new URL(request.url);
+    const qr = searchParams.get("qr");
+
+    if (!qr) return apiError("QR код шаардлагатай", 400);
+
+    const member = await db.user.findUnique({
+      where: { qrCode: qr.toUpperCase() },
+      include: {
+        transactions: {
+          orderBy: { createdAt: "desc" },
+          take: 50,
+        },
+      },
+    });
+
+    if (!member) return apiError("Гишүүн олдсонгүй", 404);
+
+    const totalPoints = member.transactions.reduce((sum, tx) => {
+      if (tx.type === "REDEEM") return sum - tx.points;
+      return sum + tx.points;
+    }, 0);
+
+    return apiSuccess({
+      member: {
+        id: member.id,
+        name: member.name,
+        phone: member.phone,
+        qrCode: member.qrCode,
+        totalPoints,
+      },
+    });
+  } catch (error) {
+    if (error instanceof Error && error.message === "UNAUTHORIZED") {
+      return apiError("Нэвтрээгүй", 401);
+    }
+    return apiError("Хайлт амжилтгүй", 500);
+  }
+}
