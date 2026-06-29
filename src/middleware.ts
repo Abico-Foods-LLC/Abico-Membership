@@ -3,6 +3,7 @@ import { getSessionFromRequest } from "@/lib/auth";
 
 const protectedRoutes: Record<string, string[]> = {
   "/dashboard": ["MEMBER", "EMPLOYEE", "STORE_ADMIN", "PLATFORM_ADMIN"],
+  "/profile": ["MEMBER", "EMPLOYEE", "STORE_ADMIN", "PLATFORM_ADMIN"],
   "/employee": ["EMPLOYEE", "STORE_ADMIN", "PLATFORM_ADMIN"],
   "/admin": ["STORE_ADMIN", "PLATFORM_ADMIN"],
 };
@@ -31,5 +32,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/dashboard/:path*", "/employee/:path*", "/admin/:path*"],
+  matcher: ["/dashboard/:path*", "/profile/:path*", "/employee/:path*", "/admin/:path*"],
 };

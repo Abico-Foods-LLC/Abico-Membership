@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Gift } from "lucide-react";
+import { Gift, UserCircle } from "lucide-react";
 import { LogoutButton } from "@/components/LogoutButton";
 
 export function Navbar({ userName, role }: { userName?: string; role?: string }) {
@@ -33,6 +33,9 @@ export function Navbar({ userName, role }: { userName?: string; role?: string })
               <Link href="/dashboard" className="nav-link">
                 <Gift className="mr-1 inline h-4 w-4" />
                 Миний оноо
+              </Link>
+              <Link href="/profile" className="nav-link" title="Профайл">
+                <UserCircle className="h-5 w-5" />
               </Link>
               <LogoutButton />
             </>
