@@ -1,5 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getSessionFromRequest } from "@/lib/auth";
+import { jwtVerify } from "jose";
+
+const COOKIE_NAME = "abico_loyalty_session";
+
+function getSecret() {
+  const secret = process.env.AUTH_SECRET ?? "abico-loyalty-dev-secret-change-me";
+  return new TextEncoder().encode(secret);
+}
 
 const protectedRoutes: Record<string, string[]> = {
   "/dashboard": ["MEMBER", "EMPLOYEE", "STORE_ADMIN", "PLATFORM_ADMIN"],
@@ -16,19 +23,25 @@ export async function middleware(request: NextRequest) {
 
   if (!matched) return NextResponse.next();
 
-  const session = await getSessionFromRequest(request);
-  if (!session) {
+  const token = request.cookies.get(COOKIE_NAME)?.value;
+  if (!token) {
     const loginUrl = new URL("/login", request.url);
     loginUrl.searchParams.set("next", pathname);
     return NextResponse.redirect(loginUrl);
   }
 
-  const [, allowedRoles] = matched;
-  if (!allowedRoles.includes(session.role)) {
-    return NextResponse.redirect(new URL("/dashboard", request.url));
+  try {
+    const { payload } = await jwtVerify(token, getSecret());
+    const [, allowedRoles] = matched;
+    if (!allowedRoles.includes(payload.role as string)) {
+      return NextResponse.redirect(new URL("/dashboard", request.url));
+    }
+    return NextResponse.next();
+  } catch {
+    const loginUrl = new URL("/login", request.url);
+    loginUrl.searchParams.set("next", pathname);
+    return NextResponse.redirect(loginUrl);
   }
-
-  return NextResponse.next();
 }
 
 export const config = {

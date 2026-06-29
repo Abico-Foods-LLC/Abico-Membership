@@ -5,7 +5,6 @@ import {
   generateQrCode,
   generateReferralCode,
   hashPassword,
-  verifyPassword,
 } from "@/lib/auth";
 import { REFERRAL_BONUS } from "@/lib/loyalty";
 import { apiError, apiSuccess } from "@/lib/utils";

@@ -82,7 +82,7 @@ export async function POST(request: Request) {
 
 export async function GET(request: Request) {
   try {
-    const session = await requireRole(["EMPLOYEE", "STORE_ADMIN", "PLATFORM_ADMIN"]);
+    await requireRole(["EMPLOYEE", "STORE_ADMIN", "PLATFORM_ADMIN"]);
     const { searchParams } = new URL(request.url);
     const qr = searchParams.get("qr");
 

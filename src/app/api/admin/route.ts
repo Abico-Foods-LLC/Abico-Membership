@@ -1,6 +1,5 @@
 import { requireRole } from "@/lib/auth";
 import { db } from "@/lib/db";
-import { getTotalPoints } from "@/lib/loyalty";
 import { apiError, apiSuccess } from "@/lib/utils";
 
 export async function GET() {
@@ -62,7 +61,6 @@ export async function GET() {
       })
       .reduce((sum, tx) => sum + tx.points, 0);
 
-    const memberIds = new Set(transactions.map((t) => t.userId));
     const totalMembers =
       session.role === "PLATFORM_ADMIN"
         ? await db.user.count({ where: { role: "MEMBER" } })

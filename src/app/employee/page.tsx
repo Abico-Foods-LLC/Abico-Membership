@@ -42,7 +42,11 @@ export default function EmployeePage() {
 
   async function startScan() {
     // ponytail: BarcodeDetector — Chrome 88+/Edge/Android Chrome. Falls back to manual input.
-    if (!(window as any).BarcodeDetector) {
+    type BarcodeDetectorCtor = new (opts: { formats: string[] }) => {
+      detect(el: HTMLVideoElement): Promise<{ rawValue: string }[]>;
+    };
+    const w = window as unknown as { BarcodeDetector?: BarcodeDetectorCtor };
+    if (!w.BarcodeDetector) {
       setError("QR скан хийхэд Chrome браузер шаардлагатай");
       return;
     }
@@ -57,7 +61,7 @@ export default function EmployeePage() {
       setScanning(true);
       setError("");
 
-      const detector = new (window as any).BarcodeDetector({ formats: ["qr_code"] });
+      const detector = new w.BarcodeDetector({ formats: ["qr_code"] });
       const loop = async () => {
         if (!videoRef.current) return;
         try {
