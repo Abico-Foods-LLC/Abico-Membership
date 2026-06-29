@@ -1,101 +1,197 @@
-import Image from "next/image";
+import Link from "next/link";
+import {
+  Award,
+  Bell,
+  QrCode,
+  ShoppingBag,
+  Store,
+  TrendingUp,
+  Users,
+} from "lucide-react";
+import { Navbar } from "@/components/Navbar";
+import { MEMBERSHIP_TIERS } from "@/lib/loyalty";
+import { getSession } from "@/lib/auth";
 
-export default function Home() {
+export default async function HomePage() {
+  const session = await getSession();
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+    <div className="min-h-screen">
+      <Navbar
+        userName={session?.name}
+        role={session?.role}
+      />
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
+      <main>
+        <section className="mx-auto max-w-6xl px-4 py-16 md:py-24">
+          <div className="max-w-3xl">
+            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-abico-sky">
+              ABICO.MN
+            </p>
+            <h1 className="mt-4 text-4xl font-extrabold leading-tight md:text-6xl">
+              Гишүүнчлэлийн
+              <span className="text-abico-gold"> Бонус Систем</span>
+            </h1>
+            <p className="mt-6 max-w-2xl text-lg text-blue-100/80">
+              Олон дэлгүүрт нэг картаар — оноо цуглуулж, бонус авна. QR кодоор
+              хурдан бүртгэл, ажилтан оноо нэмэх, гишүүний шатлал.
+            </p>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <Link href="/register" className="btn-primary">
+                Одоо бүртгүүлэх
+              </Link>
+              <Link href="/login" className="rounded-xl border border-white/20 px-4 py-2.5 text-sm font-semibold hover:bg-white/10">
+                Нэвтрэх
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        <section className="mx-auto max-w-6xl px-4 pb-16">
+          <div className="grid gap-4 md:grid-cols-3">
+            <FeatureCard
+              icon={<QrCode className="h-6 w-6 text-abico-gold" />}
+              title="QR код"
+              text="Дэлгүүрт QR кодоо үзүүлж оноо цуглуулна"
             />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
+            <FeatureCard
+              icon={<Award className="h-6 w-6 text-abico-gold" />}
+              title="Шатлал"
+              text="МӨНГӨ → АЛТ → ПЛАТИНУМ → VIP хөнгөлөлт"
+            />
+            <FeatureCard
+              icon={<Bell className="h-6 w-6 text-abico-gold" />}
+              title="Урамшуулал"
+              text="2x–3x оноо, урилга +50 оноо"
+            />
+          </div>
+        </section>
+
+        <section className="border-y border-white/10 bg-white/5 py-16">
+          <div className="mx-auto max-w-6xl px-4">
+            <h2 className="text-2xl font-bold">Гишүүний шатлал</h2>
+            <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              {MEMBERSHIP_TIERS.map((tier) => (
+                <div
+                  key={tier.id}
+                  className="rounded-2xl border border-white/10 bg-abico-navy/40 p-5"
+                >
+                  <p className="text-sm font-bold uppercase tracking-wide" style={{ color: tier.color === "#001C3B" ? "#bfe0f3" : tier.color }}>
+                    {tier.nameMn}
+                  </p>
+                  <p className="mt-2 text-2xl font-extrabold">
+                    {tier.discountPercent}%
+                  </p>
+                  <p className="mt-1 text-sm text-blue-100/70">{tier.perks}</p>
+                  <p className="mt-3 text-xs text-blue-100/50">
+                    {tier.maxPoints
+                      ? `${tier.minPoints.toLocaleString()} – ${tier.maxPoints.toLocaleString()} оноо`
+                      : `${tier.minPoints.toLocaleString()}+ оноо`}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="mx-auto max-w-6xl px-4 py-16">
+          <h2 className="text-2xl font-bold">Хэрхэн ажилладаг вэ?</h2>
+          <div className="mt-8 grid gap-6 md:grid-cols-3">
+            <StepCard
+              icon={<Users />}
+              title="Хэрэглэгч"
+              items={[
+                "Апп эсвэл веб дээр бүртгүүлнэ",
+                "QR кодоор дэлгүүрт нэвтэрнэ",
+                "Оноогоо цуглуулж, бонус авна",
+              ]}
+            />
+            <StepCard
+              icon={<Store />}
+              title="Дэлгүүр"
+              items={[
+                "Партнер дэлгүүр бүртгэлтэй",
+                "Кассчин оноо нэмэх эрхтэй",
+                "Гишүүдийн мэдээлэл харах",
+              ]}
+            />
+            <StepCard
+              icon={<TrendingUp />}
+              title="ABICO платформ"
+              items={[
+                "Нэгдсэн нэвтрэх тогтолцоо",
+                "Онооны баталгаажуулалт",
+                "Тайлан & шинжилгээ",
+              ]}
+            />
+          </div>
+        </section>
+
+        <section className="mx-auto max-w-6xl px-4 pb-20">
+          <div className="rounded-3xl border border-abico-gold/30 bg-gradient-to-br from-abico-gold/15 to-transparent p-8 md:p-10">
+            <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
+              <div>
+                <p className="text-sm uppercase tracking-wider text-abico-gold">
+                  ₮1,000 = 1 оноо
+                </p>
+                <h3 className="mt-2 text-2xl font-bold">
+                  Нэг апп, олон дэлгүүр
+                </h3>
+                <p className="mt-2 max-w-xl text-blue-100/80">
+                  ABICO Loyalty-г туршиж үзээрэй. MVP хувилбарт бүртгэл, QR,
+                  оноо нэмэх, удирдлагын самбар багтсан.
+                </p>
+              </div>
+              <Link href="/register" className="btn-primary shrink-0">
+                <ShoppingBag className="mr-2 inline h-4 w-4" />
+                Эхлэх
+              </Link>
+            </div>
+          </div>
+        </section>
       </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+    </div>
+  );
+}
+
+function FeatureCard({
+  icon,
+  title,
+  text,
+}: {
+  icon: React.ReactNode;
+  title: string;
+  text: string;
+}) {
+  return (
+    <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
+      {icon}
+      <h3 className="mt-4 font-semibold">{title}</h3>
+      <p className="mt-2 text-sm text-blue-100/70">{text}</p>
+    </div>
+  );
+}
+
+function StepCard({
+  icon,
+  title,
+  items,
+}: {
+  icon: React.ReactNode;
+  title: string;
+  items: string[];
+}) {
+  return (
+    <div className="rounded-2xl border border-white/10 p-6">
+      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 text-abico-gold">
+        {icon}
+      </div>
+      <h3 className="mt-4 text-lg font-semibold">{title}</h3>
+      <ul className="mt-3 space-y-2 text-sm text-blue-100/75">
+        {items.map((item) => (
+          <li key={item}>• {item}</li>
+        ))}
+      </ul>
     </div>
   );
 }
