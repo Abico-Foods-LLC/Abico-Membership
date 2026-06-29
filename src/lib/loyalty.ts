@@ -19,8 +19,8 @@ export const MEMBERSHIP_TIERS: MembershipTier[] = [
     nameMn: "СТАНДАРТ",
     minPoints: 0,
     maxPoints: 999,
-    discountPercent: 2,
-    perks: "2% хөнгөлөлт",
+    discountPercent: 0,
+    perks: "Оноо цуглуулах эрх",
     color: "#94a3b8",
   },
   {
