@@ -104,14 +104,18 @@ export function AuthForm({ mode }: { mode: "login" | "register" }) {
         {mode === "login" ? (
           <>
             Бүртгэл байхгүй юу?{" "}
-            <Link href="/register" className="text-abico-gold hover:underline">
+            <Link href="/register" className="text-abico-light hover:underline">
               Бүртгүүлэх
+            </Link>
+            <span className="mx-2">·</span>
+            <Link href="/forgot-password" className="text-abico-light hover:underline">
+              Нууц үг мартсан?
             </Link>
           </>
         ) : (
           <>
             Аль хэдийн бүртгэлтэй юу?{" "}
-            <Link href="/login" className="text-abico-gold hover:underline">
+            <Link href="/login" className="text-abico-light hover:underline">
               Нэвтрэх
             </Link>
           </>
