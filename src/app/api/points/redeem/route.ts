@@ -14,40 +14,47 @@ export async function POST(request: Request) {
     const session = await requireRole(["EMPLOYEE", "STORE_ADMIN", "PLATFORM_ADMIN"]);
     const body = schema.parse(await request.json());
 
-    const member = await db.user.findUnique({
-      where: { qrCode: body.qrCode.toUpperCase() },
-      include: { transactions: true },
-    });
-    if (!member) return apiError("QR код олдсонгүй", 404);
-    if (member.role !== "MEMBER") return apiError("Зөвхөн гишүүнд хамаарна", 400);
-
-    const currentPoints = getTotalPoints(member.transactions);
-    if (body.points > currentPoints) {
-      return apiError(`Оноо хүрэхгүй байна. Одоогийн оноо: ${currentPoints}`, 400);
-    }
-
     const employee = await db.user.findUnique({ where: { id: session.userId } });
 
-    const transaction = await db.pointTransaction.create({
-      data: {
-        userId: member.id,
-        storeId: employee?.storeId ?? null,
-        employeeId: session.userId,
-        type: "REDEEM",
-        points: body.points,
-        description: `${body.points} оноо хасагдлаа`,
-      },
-    });
+    const transaction = await db.$transaction(async (tx) => {
+      const member = await tx.user.findUnique({
+        where: { qrCode: body.qrCode.toUpperCase() },
+        include: { transactions: true },
+      });
+      if (!member) throw new Error("NOT_FOUND");
+      if (member.role !== "MEMBER") throw new Error("NOT_MEMBER");
+
+      const currentPoints = getTotalPoints(member.transactions);
+      if (body.points > currentPoints) throw new Error(`INSUFFICIENT:${currentPoints}`);
+
+      return tx.pointTransaction.create({
+        data: {
+          userId: member.id,
+          storeId: employee?.storeId ?? null,
+          employeeId: session.userId,
+          type: "REDEEM",
+          points: body.points,
+          description: `${body.points} оноо хасагдлаа`,
+        },
+      });
+    }, { isolationLevel: "Serializable" });
 
     return apiSuccess({
       transaction,
       pointsRedeemed: body.points,
-      remainingPoints: currentPoints - body.points,
     });
   } catch (error) {
     if (error instanceof z.ZodError) return apiError(error.issues[0]?.message ?? "Буруу өгөгдөл", 400);
-    if (error instanceof Error && error.message === "UNAUTHORIZED") return apiError("Нэвтрээгүй", 401);
-    if (error instanceof Error && error.message === "FORBIDDEN") return apiError("Эрх хүрэхгүй", 403);
+    if (error instanceof Error) {
+      if (error.message === "UNAUTHORIZED") return apiError("Нэвтрээгүй", 401);
+      if (error.message === "FORBIDDEN") return apiError("Эрх хүрэхгүй", 403);
+      if (error.message === "NOT_FOUND") return apiError("QR код олдсонгүй", 404);
+      if (error.message === "NOT_MEMBER") return apiError("Зөвхөн гишүүнд хамаарна", 400);
+      if (error.message.startsWith("INSUFFICIENT:")) {
+        const pts = error.message.split(":")[1];
+        return apiError(`Оноо хүрэхгүй байна. Одоогийн оноо: ${pts}`, 400);
+      }
+    }
     return apiError("Оноо хасах амжилтгүй", 500);
   }
 }
