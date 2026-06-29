@@ -85,11 +85,12 @@ export async function GET(request: Request) {
     await requireRole(["EMPLOYEE", "STORE_ADMIN", "PLATFORM_ADMIN"]);
     const { searchParams } = new URL(request.url);
     const qr = searchParams.get("qr");
+    const phone = searchParams.get("phone");
 
-    if (!qr) return apiError("QR код шаардлагатай", 400);
+    if (!qr && !phone) return apiError("QR код эсвэл утасны дугаар шаардлагатай", 400);
 
-    const member = await db.user.findUnique({
-      where: { qrCode: qr.toUpperCase() },
+    const member = await db.user.findFirst({
+      where: qr ? { qrCode: qr.toUpperCase() } : { phone: phone! },
       include: {
         transactions: {
           orderBy: { createdAt: "desc" },
@@ -99,6 +100,7 @@ export async function GET(request: Request) {
     });
 
     if (!member) return apiError("Гишүүн олдсонгүй", 404);
+    if (member.role !== "MEMBER") return apiError("Энэ дугаар гишүүн биш байна", 400);
 
     const totalPoints = member.transactions.reduce((sum, tx) => {
       if (tx.type === "REDEEM") return sum - tx.points;

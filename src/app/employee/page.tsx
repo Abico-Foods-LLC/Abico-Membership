@@ -17,6 +17,8 @@ type MemberPreview = {
 
 export default function EmployeePage() {
   const [qrCode, setQrCode] = useState("");
+  const [phoneInput, setPhoneInput] = useState("");
+  const [lookupMode, setLookupMode] = useState<"qr" | "phone">("qr");
   const [purchaseAmount, setPurchaseAmount] = useState("");
   const [redeemPoints, setRedeemPoints] = useState("");
   const [member, setMember] = useState<MemberPreview | null>(null);
@@ -82,15 +84,19 @@ export default function EmployeePage() {
     }
   }
 
-  async function doLookup(code: string) {
+  async function doLookup(code: string, mode: "qr" | "phone" = "qr") {
     setError("");
     setMember(null);
     setEarnResult("");
     setRedeemResult("");
-    const res = await fetch(`/api/points/add?qr=${encodeURIComponent(code)}`);
+    const param = mode === "phone"
+      ? `phone=${encodeURIComponent(code)}`
+      : `qr=${encodeURIComponent(code)}`;
+    const res = await fetch(`/api/points/add?${param}`);
     const data = await res.json();
     if (!res.ok) { setError(data.error ?? "Олдсонгүй"); return; }
     setMember(data.member);
+    setQrCode(data.member.qrCode);
   }
 
   async function addPoints(e: React.FormEvent) {
@@ -159,37 +165,67 @@ export default function EmployeePage() {
               <h2 className="font-semibold">1. Гишүүн хайх</h2>
             </div>
 
-            {scanning && (
-              <div className="mb-4 overflow-hidden rounded-xl border border-abico-gold/40">
-                <video ref={videoRef} className="w-full" playsInline muted />
-                <div className="flex items-center justify-between bg-black/40 px-4 py-2">
-                  <p className="text-sm text-blue-100/70">QR код камер руу чиглүүлнэ...</p>
-                  <button type="button" onClick={stopScan} className="flex items-center gap-1 text-sm text-red-300 hover:text-red-200">
-                    <CameraOff className="h-4 w-4" /> Зогсоох
-                  </button>
-                </div>
-              </div>
-            )}
-
-            <div className="flex gap-2">
-              <input
-                value={qrCode}
-                onChange={(e) => setQrCode(e.target.value.toUpperCase())}
-                placeholder="ABICO-XXXXXXXXXXXX"
-                className="flex-1 rounded-xl border border-white/15 bg-white/10 px-4 py-2.5 font-mono text-sm outline-none focus:ring-2 focus:ring-abico-gold"
-              />
-              <Button type="button" variant="secondary" onClick={() => doLookup(qrCode)} disabled={!qrCode}>
-                Хайх
-              </Button>
-              <button
-                type="button"
-                onClick={scanning ? stopScan : startScan}
-                title="Камераар скан хийх"
-                className="flex items-center gap-1 rounded-xl border border-white/15 bg-white/10 px-3 py-2.5 text-sm hover:bg-white/20"
-              >
-                <Camera className="h-4 w-4 text-abico-gold" />
+            {/* Mode toggle */}
+            <div className="mb-3 flex rounded-xl border border-white/10 bg-white/5 p-1">
+              <button type="button"
+                onClick={() => setLookupMode("qr")}
+                className={`flex flex-1 items-center justify-center gap-1.5 rounded-lg py-2 text-sm font-medium transition ${lookupMode === "qr" ? "bg-white/10 text-white" : "text-blue-100/50"}`}>
+                <ScanLine className="h-4 w-4" /> QR код
+              </button>
+              <button type="button"
+                onClick={() => setLookupMode("phone")}
+                className={`flex flex-1 items-center justify-center gap-1.5 rounded-lg py-2 text-sm font-medium transition ${lookupMode === "phone" ? "bg-white/10 text-white" : "text-blue-100/50"}`}>
+                <UserSearch className="h-4 w-4" /> Утасны дугаар
               </button>
             </div>
+
+            {lookupMode === "qr" ? (
+              <>
+                {scanning && (
+                  <div className="mb-4 overflow-hidden rounded-xl border border-abico-gold/40">
+                    <video ref={videoRef} className="w-full" playsInline muted />
+                    <div className="flex items-center justify-between bg-black/40 px-4 py-2">
+                      <p className="text-sm text-blue-100/70">QR код камер руу чиглүүлнэ...</p>
+                      <button type="button" onClick={stopScan} className="flex items-center gap-1 text-sm text-red-300 hover:text-red-200">
+                        <CameraOff className="h-4 w-4" /> Зогсоох
+                      </button>
+                    </div>
+                  </div>
+                )}
+                <div className="flex gap-2">
+                  <input
+                    value={qrCode}
+                    onChange={(e) => setQrCode(e.target.value.toUpperCase())}
+                    placeholder="ABICO-XXXXXXXXXXXX"
+                    className="flex-1 rounded-xl border border-white/15 bg-white/10 px-4 py-2.5 font-mono text-sm outline-none focus:ring-2 focus:ring-abico-gold"
+                  />
+                  <Button type="button" variant="secondary" onClick={() => doLookup(qrCode)} disabled={!qrCode}>
+                    Хайх
+                  </Button>
+                  <button
+                    type="button"
+                    onClick={scanning ? stopScan : startScan}
+                    title="Камераар скан хийх"
+                    className="flex items-center gap-1 rounded-xl border border-white/15 bg-white/10 px-3 py-2.5 text-sm hover:bg-white/20"
+                  >
+                    <Camera className="h-4 w-4 text-abico-gold" />
+                  </button>
+                </div>
+              </>
+            ) : (
+              <div className="flex gap-2">
+                <input
+                  value={phoneInput}
+                  onChange={(e) => setPhoneInput(e.target.value)}
+                  placeholder="99112233"
+                  type="tel"
+                  className="flex-1 rounded-xl border border-white/15 bg-white/10 px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-abico-gold"
+                />
+                <Button type="button" variant="secondary" onClick={() => doLookup(phoneInput, "phone")} disabled={!phoneInput}>
+                  Хайх
+                </Button>
+              </div>
+            )}
 
             {member && (
               <div className="mt-4 rounded-xl border border-emerald-400/30 bg-emerald-400/10 p-4">
