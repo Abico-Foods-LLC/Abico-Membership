@@ -51,7 +51,7 @@ export const MEMBERSHIP_TIERS: MembershipTier[] = [
     maxPoints: null,
     discountPercent: 12,
     perks: "12% хөнгөлөлт + онцгой үйлчлэл",
-    color: "#001C3B",
+    color: "#00b5f5",
   },
 ];
 

@@ -110,19 +110,19 @@ export default function DashboardPage() {
 
         {/* ── Membership Card ── */}
         <div className="relative overflow-hidden rounded-3xl p-6 sm:p-8"
-          style={{ background: "linear-gradient(135deg, #001C3B 0%, #003060 60%, #001C3B 100%)" }}>
+          style={{ background: "linear-gradient(135deg, #001C3B 0%, #023876 60%, #001C3B 100%)" }}>
 
           <div className="pointer-events-none absolute -right-16 -top-16 h-64 w-64 rounded-full"
-            style={{ background: "radial-gradient(circle, rgba(245,197,24,0.18) 0%, transparent 70%)" }} />
+            style={{ background: "radial-gradient(circle, rgba(21,114,190,0.25) 0%, transparent 70%)" }} />
           <div className="pointer-events-none absolute -bottom-12 -left-12 h-48 w-48 rounded-full"
             style={{ background: `radial-gradient(circle, ${tier.color}33 0%, transparent 70%)` }} />
 
           {/* Top */}
           <div className="relative flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <span className="flex h-9 w-9 items-center justify-center rounded-full bg-abico-gold text-sm font-bold text-abico-navy">A</span>
+              <span className="flex h-9 w-9 items-center justify-center rounded-full bg-abico-blue text-sm font-bold text-white">A</span>
               <div>
-                <p className="text-xs font-bold tracking-widest text-abico-gold">ABICO</p>
+                <p className="text-xs font-bold tracking-widest text-abico-light">ABICO</p>
                 <p className="text-xs text-blue-100/50">LOYALTY CARD</p>
               </div>
             </div>
@@ -145,7 +145,7 @@ export default function DashboardPage() {
                 <div className="mt-4">
                   <div className="h-2 w-full overflow-hidden rounded-full bg-white/10">
                     <div className="h-full rounded-full"
-                      style={{ width: `${progressPct}%`, background: `linear-gradient(90deg, ${tier.color}, #F5C518)` }} />
+                      style={{ width: `${progressPct}%`, background: `linear-gradient(90deg, ${tier.color}, #1572BE)` }} />
                   </div>
                   <p className="mt-1.5 text-xs text-blue-100/50">
                     {formatPoints(pointsToNext)} оноо → <span style={{ color: nextTier.color }}>{nextTier.nameMn}</span>
@@ -224,7 +224,7 @@ export default function DashboardPage() {
               </p>
               <div className="mt-4 flex items-center justify-between rounded-xl bg-white/10 px-4 py-3">
                 <code className="font-mono text-xl tracking-widest">{user.referralCode}</code>
-                <button type="button" onClick={() => copy(user.referralCode)} className="text-abico-gold hover:text-yellow-300">
+                <button type="button" onClick={() => copy(user.referralCode)} className="text-abico-light hover:text-white">
                   <Copy className="h-5 w-5" />
                 </button>
               </div>

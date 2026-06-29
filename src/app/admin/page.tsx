@@ -150,7 +150,7 @@ function StoresSection({ stores, onRefresh }: { stores: StoreItem[]; onRefresh: 
     <Card>
       <div className="mb-4 flex items-center justify-between">
         <h2 className="text-lg font-semibold">Партнер дэлгүүрүүд</h2>
-        <button type="button" onClick={() => setOpen(!open)} className="flex items-center gap-1 text-sm text-abico-gold hover:text-yellow-300">
+        <button type="button" onClick={() => setOpen(!open)} className="flex items-center gap-1 text-sm text-abico-gold hover:text-white">
           {open ? <X className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
           {open ? "Болих" : "Нэмэх"}
         </button>
@@ -215,7 +215,7 @@ function EmployeesSection({
     <Card>
       <div className="mb-4 flex items-center justify-between">
         <h2 className="text-lg font-semibold">Ажилтнууд</h2>
-        <button type="button" onClick={() => setOpen(!open)} className="flex items-center gap-1 text-sm text-abico-gold hover:text-yellow-300">
+        <button type="button" onClick={() => setOpen(!open)} className="flex items-center gap-1 text-sm text-abico-gold hover:text-white">
           {open ? <X className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
           {open ? "Болих" : "Нэмэх"}
         </button>
@@ -325,7 +325,7 @@ function PromotionsSection({
           <Tag className="h-5 w-5 text-abico-gold" />
           <h2 className="text-lg font-semibold">Урамшуулал</h2>
         </div>
-        <button type="button" onClick={() => setOpen(!open)} className="flex items-center gap-1 text-sm text-abico-gold hover:text-yellow-300">
+        <button type="button" onClick={() => setOpen(!open)} className="flex items-center gap-1 text-sm text-abico-gold hover:text-white">
           {open ? <X className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
           {open ? "Болих" : "Нэмэх"}
         </button>
