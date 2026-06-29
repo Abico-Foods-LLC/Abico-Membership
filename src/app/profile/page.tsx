@@ -19,7 +19,8 @@ export default function ProfilePage() {
   const [newPwd, setNewPwd] = useState("");
   const [pwdMsg, setPwdMsg] = useState("");
   const [pwdErr, setPwdErr] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [changingPwd, setChangingPwd] = useState(false);
 
   useEffect(() => {
     fetch("/api/me")
@@ -37,7 +38,7 @@ export default function ProfilePage() {
 
   async function saveName(e: React.FormEvent) {
     e.preventDefault();
-    setLoading(true);
+    setSaving(true);
     setNameErr("");
     setNameMsg("");
     const res = await fetch("/api/profile", {
@@ -46,15 +47,16 @@ export default function ProfilePage() {
       body: JSON.stringify({ name, email }),
     });
     const data = await res.json();
-    setLoading(false);
+    setSaving(false);
     if (!res.ok) { setNameErr(data.error ?? "Алдаа"); return; }
     setNameMsg("Амжилттай хадгалагдлаа");
     setMe((m) => m && { ...m, name: data.name, email: data.email });
+    setEmail(data.email ?? "");
   }
 
   async function changePassword(e: React.FormEvent) {
     e.preventDefault();
-    setLoading(true);
+    setChangingPwd(true);
     setPwdErr("");
     setPwdMsg("");
     const res = await fetch("/api/profile", {
@@ -63,7 +65,7 @@ export default function ProfilePage() {
       body: JSON.stringify({ current: curPwd, next: newPwd }),
     });
     const data = await res.json();
-    setLoading(false);
+    setChangingPwd(false);
     if (!res.ok) { setPwdErr(data.error ?? "Алдаа"); return; }
     setPwdMsg("Нууц үг амжилттай солигдлоо");
     setCurPwd("");
@@ -123,8 +125,8 @@ export default function ProfilePage() {
                 <CheckCircle2 className="h-4 w-4" /> {nameMsg}
               </p>
             )}
-            <Button type="submit" className="w-full" disabled={loading}>
-              Хадгалах
+            <Button type="submit" className="w-full" disabled={saving}>
+              {saving ? "Хадгалж байна..." : "Хадгалах"}
             </Button>
           </form>
         </Card>
@@ -163,8 +165,8 @@ export default function ProfilePage() {
                 <CheckCircle2 className="h-4 w-4" /> {pwdMsg}
               </p>
             )}
-            <Button type="submit" className="w-full" disabled={loading}>
-              Нууц үг солих
+            <Button type="submit" className="w-full" disabled={changingPwd}>
+              {changingPwd ? "Солиж байна..." : "Нууц үг солих"}
             </Button>
           </form>
         </Card>

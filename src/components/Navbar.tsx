@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Gift, UserCircle } from "lucide-react";
 import { LogoutButton } from "@/components/LogoutButton";
 
@@ -6,14 +7,8 @@ export function Navbar({ userName, role, loading }: { userName?: string; role?: 
   return (
     <header className="border-b border-white/10 bg-abico-navy/95 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4">
-        <Link href="/" className="flex items-center gap-2 text-white">
-          <span className="flex h-9 w-9 items-center justify-center rounded-full bg-abico-gold text-sm font-bold text-abico-navy">
-            A
-          </span>
-          <div>
-            <p className="text-sm font-semibold tracking-wide">ABICO</p>
-            <p className="text-xs text-blue-100/70">Гишүүнчлэлийн бонус</p>
-          </div>
+        <Link href="/" className="flex items-center">
+          <Image src="/abico-logo.png" alt="Abico" width={157} height={44} priority />
         </Link>
 
         <nav className="flex items-center gap-3 text-sm">

@@ -78,13 +78,13 @@ export default function AdminPage() {
               <StatCard icon={<Store className="h-5 w-5" />} label="Дэлгүүр / Ажилтан" value={`${data.stats.storeCount} / ${data.stats.employeeCount}`} />
             </div>
 
-            <div className="mt-8 grid gap-6 lg:grid-cols-2">
+            <div className="mt-4 grid gap-4 lg:grid-cols-2">
               <StoresSection stores={data.stores} onRefresh={fetchData} />
               <Card>
-                <h2 className="mb-4 text-lg font-semibold">Сүүлийн гүйлгээ</h2>
-                <div className="space-y-3">
+                <h2 className="mb-3 text-lg font-semibold">Сүүлийн гүйлгээ</h2>
+                <div className="space-y-2">
                   {data.recentTransactions.map((tx) => (
-                    <div key={tx.id} className="flex items-center justify-between rounded-xl border border-white/10 px-4 py-3">
+                    <div key={tx.id} className="flex items-center justify-between rounded-xl border border-white/10 px-3 py-2">
                       <div>
                         <p className="font-medium">{tx.user.name}</p>
                         <p className="text-xs text-blue-100/60">
@@ -98,12 +98,12 @@ export default function AdminPage() {
               </Card>
             </div>
 
-            <div className="mt-6 grid gap-6 lg:grid-cols-2">
+            <div className="mt-4 grid gap-4 lg:grid-cols-2">
               <EmployeesSection stores={data.stores} employees={data.employees} onRefresh={fetchData} />
               <PromotionsSection stores={data.stores} promotions={data.promotions} onRefresh={fetchData} />
             </div>
 
-            <div className="mt-6">
+            <div className="mt-4">
               <MembersSection />
             </div>
           </>
@@ -232,7 +232,7 @@ function EmployeesSection({
               required
               value={form.storeId}
               onChange={(e) => setForm({ ...form, storeId: e.target.value })}
-              className="w-full rounded-xl border border-white/15 bg-white/10 px-4 py-2.5 outline-none focus:ring-2 focus:ring-abico-gold"
+              className="w-full rounded-xl border border-white/15 bg-[#001c3b] px-4 py-2.5 text-white outline-none focus:ring-2 focus:ring-abico-blue"
             >
               <option value="">— Сонгох —</option>
               {stores.map((s) => <option key={s.id} value={s.id}>{s.name}</option>)}
@@ -243,7 +243,7 @@ function EmployeesSection({
             <select
               value={form.role}
               onChange={(e) => setForm({ ...form, role: e.target.value })}
-              className="w-full rounded-xl border border-white/15 bg-white/10 px-4 py-2.5 outline-none focus:ring-2 focus:ring-abico-gold"
+              className="w-full rounded-xl border border-white/15 bg-[#001c3b] px-4 py-2.5 text-white outline-none focus:ring-2 focus:ring-abico-blue"
             >
               <option value="EMPLOYEE">Ажилтан (Кассчин)</option>
               <option value="STORE_ADMIN">Дэлгүүрийн Админ</option>
@@ -339,7 +339,7 @@ function PromotionsSection({
             <select
               value={form.storeId}
               onChange={(e) => setForm({ ...form, storeId: e.target.value })}
-              className="w-full rounded-xl border border-white/15 bg-white/10 px-4 py-2.5 outline-none focus:ring-2 focus:ring-abico-gold"
+              className="w-full rounded-xl border border-white/15 bg-[#001c3b] px-4 py-2.5 text-white outline-none focus:ring-2 focus:ring-abico-blue"
             >
               <option value="">— Бүх дэлгүүр —</option>
               {stores.map((s) => <option key={s.id} value={s.id}>{s.name}</option>)}
@@ -350,7 +350,7 @@ function PromotionsSection({
             <select
               value={form.multiplier}
               onChange={(e) => setForm({ ...form, multiplier: e.target.value })}
-              className="w-full rounded-xl border border-white/15 bg-white/10 px-4 py-2.5 outline-none focus:ring-2 focus:ring-abico-gold"
+              className="w-full rounded-xl border border-white/15 bg-[#001c3b] px-4 py-2.5 text-white outline-none focus:ring-2 focus:ring-abico-blue"
             >
               <option value="2">2x оноо</option>
               <option value="3">3x оноо</option>
@@ -365,7 +365,7 @@ function PromotionsSection({
                 required
                 value={form.startsAt}
                 onChange={(e) => setForm({ ...form, startsAt: e.target.value })}
-                className="w-full rounded-xl border border-white/15 bg-white/10 px-4 py-2.5 outline-none focus:ring-2 focus:ring-abico-gold"
+                className="w-full rounded-xl border border-white/15 bg-[#001c3b] px-4 py-2.5 text-white outline-none focus:ring-2 focus:ring-abico-blue"
               />
             </div>
             <div>
@@ -375,7 +375,7 @@ function PromotionsSection({
                 required
                 value={form.endsAt}
                 onChange={(e) => setForm({ ...form, endsAt: e.target.value })}
-                className="w-full rounded-xl border border-white/15 bg-white/10 px-4 py-2.5 outline-none focus:ring-2 focus:ring-abico-gold"
+                className="w-full rounded-xl border border-white/15 bg-[#001c3b] px-4 py-2.5 text-white outline-none focus:ring-2 focus:ring-abico-blue"
               />
             </div>
           </div>
@@ -457,7 +457,7 @@ function MembersSection() {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Нэр эсвэл утасны дугаараар хайх..."
-          className="w-64 rounded-xl border border-white/15 bg-white/10 px-4 py-2 text-sm outline-none focus:ring-2 focus:ring-abico-gold"
+          className="w-64 rounded-xl border border-white/15 bg-[#001c3b] px-4 py-2 text-sm text-white outline-none focus:ring-2 focus:ring-abico-blue"
         />
       </div>
 
@@ -517,7 +517,7 @@ function Input({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         required={required}
-        className="w-full rounded-xl border border-white/15 bg-white/10 px-4 py-2.5 outline-none focus:ring-2 focus:ring-abico-gold"
+        className="w-full rounded-xl border border-white/15 bg-[#001c3b] px-4 py-2.5 text-white outline-none focus:ring-2 focus:ring-abico-blue"
       />
     </label>
   );

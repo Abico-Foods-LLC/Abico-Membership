@@ -38,6 +38,7 @@ export async function GET() {
         id: user.id,
         name: user.name,
         phone: user.phone,
+        email: user.email,
         qrCode: user.qrCode,
         referralCode: user.referralCode,
         role: user.role,

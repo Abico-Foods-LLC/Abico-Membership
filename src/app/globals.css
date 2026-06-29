@@ -17,6 +17,11 @@ body {
     radial-gradient(700px 400px at -10% 100%, rgba(0, 181, 245, 0.08), transparent 55%);
 }
 
+select option {
+  background-color: #001c3b;
+  color: white;
+}
+
 @layer components {
   .btn-primary {
     @apply inline-flex items-center justify-center rounded-xl bg-abico-blue px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-abico-dark;

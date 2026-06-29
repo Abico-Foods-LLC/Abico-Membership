@@ -16,7 +16,7 @@ export const MEMBERSHIP_TIERS: MembershipTier[] = [
   {
     id: "mongol",
     name: "Mongol",
-    nameMn: "МӨНГӨ",
+    nameMn: "СТАНДАРТ",
     minPoints: 0,
     maxPoints: 999,
     discountPercent: 2,
