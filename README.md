@@ -1,36 +1,61 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ABICO Loyalty — Гишүүнчлэлийн бонус систем
 
-## Getting Started
+PowerPoint санал болгосон **ABICO Loyalty** платформын MVP хувилбар.
 
-First, run the development server:
+## Онцлог (ҮЕ 1 — MVP)
+
+- Гишүүн бүртгэл, нэвтрэх
+- QR код (гишүүн таних)
+- Оноо цуглуулах (`₮1,000 = 1 оноо`)
+- Ажилтны оноо нэмэх модуль
+- Гишүүний шатлал (МӨНГӨ → АЛТ → ПЛАТИНУМ → VIP)
+- Урилга +50 оноо
+- Урамшуулал (2x–3x multiplier)
+- Дэлгүүрийн удирдлагын самбар
+
+## Tech stack
+
+- **Next.js 14** (App Router)
+- **TypeScript**
+- **Prisma + SQLite**
+- **Tailwind CSS**
+
+## Ажиллуулах
 
 ```bash
+cd abico-loyalty
+npm install
+npm run db:setup
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Дараа нь: [http://localhost:3000](http://localhost:3000)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Demo бүртгэл (нууц үг: `abico2026`)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Эрх | Утас | QR код |
+|-----|------|--------|
+| Platform Admin | 99000001 | — |
+| Store Admin | 99000002 | — |
+| Ажилтан (кассчин) | 99000003 | — |
+| Гишүүн | 99112233 | ABICO-MEMBER0001 |
+| Гишүүн (АЛТ шат) | 99223344 | ABICO-MEMBER0002 |
 
-## Learn More
+## Хуудасууд
 
-To learn more about Next.js, take a look at the following resources:
+| URL | Тайлбар |
+|-----|---------|
+| `/` | Нүүр хуудас |
+| `/register` | Гишүүн бүртгэл |
+| `/login` | Нэвтрэх |
+| `/dashboard` | Гишүүний самбар (QR, оноо, түүх) |
+| `/employee` | Ажилтны оноо нэмэх |
+| `/admin` | Удирдлагын тайлан |
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Дараагийн үе (PPT-ийн төлөвлөгөө)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Push мэдэгдэл
+- Гео-тохиргоо
+- Партнер онбординг портал
+- AI санал болгол
+- POS систем холболт

@@ -3,25 +3,36 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --abico-navy: #001c3b;
+  --abico-gold: #f5c518;
+  --abico-sky: #bfe0f3;
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  @apply min-h-screen bg-abico-navy text-white antialiased;
+  background-image:
+    radial-gradient(900px 500px at 90% -10%, rgba(191, 224, 243, 0.12), transparent 60%),
+    radial-gradient(700px 400px at -10% 100%, rgba(245, 197, 24, 0.08), transparent 55%);
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
+@layer components {
+  .btn-primary {
+    @apply inline-flex items-center justify-center rounded-xl bg-abico-gold px-4 py-2.5 text-sm font-semibold text-abico-navy transition hover:bg-yellow-300;
+  }
+
+  .btn-ghost {
+    @apply rounded-xl px-3 py-2 text-sm text-blue-100 transition hover:bg-white/10 hover:text-white;
+  }
+
+  .nav-link {
+    @apply rounded-xl px-3 py-2 text-sm text-blue-100 transition hover:bg-white/10 hover:text-white;
+  }
+
+  .stat-value {
+    @apply text-3xl font-extrabold tracking-tight text-white;
+  }
+
+  .stat-label {
+    @apply text-xs font-semibold uppercase tracking-wider text-blue-100/70;
   }
 }
