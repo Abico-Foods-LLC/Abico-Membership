@@ -23,11 +23,15 @@ export default function ProfilePage() {
 
   useEffect(() => {
     fetch("/api/me")
-      .then((r) => r.json())
+      .then(async (r) => { if (!r.ok) throw new Error(String(r.status)); return r.json(); })
       .then((d) => {
         setMe({ name: d.user.name, phone: d.user.phone, email: d.user.email, role: d.user.role });
         setName(d.user.name);
         setEmail(d.user.email ?? "");
+      })
+      .catch((e) => {
+        if (e.message === "401") window.location.href = "/login";
+        else setNameErr("Мэдээлэл ачаалахад алдаа гарлаа");
       });
   }, []);
 
