@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { BarChart3, Plus, Store, Tag, Trash2, Users, Wallet, X } from "lucide-react";
+import { BarChart3, Plus, Store, Trash2, Users, Wallet, X } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
 import { Card } from "@/components/Card";
 import { Button } from "@/components/Button";
@@ -9,16 +9,6 @@ import { formatPoints } from "@/lib/loyalty";
 
 type StoreItem = { id: string; name: string; slug: string; address: string | null };
 type EmployeeItem = { id: string; name: string; role: string; store: { name: string } | null };
-type PromotionItem = {
-  id: string;
-  title: string;
-  multiplier: number;
-  startsAt: string;
-  endsAt: string;
-  isActive: boolean;
-  store: { name: string } | null;
-};
-
 type AdminData = {
   stats: {
     totalMembers: number;
@@ -29,7 +19,6 @@ type AdminData = {
   };
   stores: StoreItem[];
   employees: EmployeeItem[];
-  promotions: PromotionItem[];
   recentTransactions: Array<{
     id: string;
     points: number;
@@ -98,9 +87,8 @@ export default function AdminPage() {
               </Card>
             </div>
 
-            <div className="mt-4 grid gap-4 lg:grid-cols-2">
+            <div className="mt-4">
               <EmployeesSection stores={data.stores} employees={data.employees} onRefresh={fetchData} />
-              <PromotionsSection stores={data.stores} promotions={data.promotions} onRefresh={fetchData} />
             </div>
 
             <div className="mt-4">
@@ -263,150 +251,6 @@ function EmployeesSection({
             <p className="text-sm text-gray-500">{emp.store?.name ?? "—"} · {emp.role === "EMPLOYEE" ? "Кассчин" : "Дэлгүүр Админ"}</p>
           </div>
         ))}
-      </div>
-    </Card>
-  );
-}
-
-function PromotionsSection({
-  stores,
-  promotions,
-  onRefresh,
-}: {
-  stores: StoreItem[];
-  promotions: PromotionItem[];
-  onRefresh: () => void;
-}) {
-  const [open, setOpen] = useState(false);
-  const [form, setForm] = useState({
-    title: "",
-    storeId: "",
-    multiplier: "2",
-    startsAt: "",
-    endsAt: "",
-  });
-  const [loading, setLoading] = useState(false);
-  const [err, setErr] = useState("");
-
-  async function submit(e: React.FormEvent) {
-    e.preventDefault();
-    setLoading(true);
-    setErr("");
-    const res = await fetch("/api/admin/promotions", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        title: form.title,
-        storeId: form.storeId || undefined,
-        multiplier: Number(form.multiplier),
-        startsAt: new Date(form.startsAt).toISOString(),
-        endsAt: new Date(form.endsAt).toISOString(),
-      }),
-    });
-    const data = await res.json();
-    setLoading(false);
-    if (!res.ok) { setErr(data.error ?? "Алдаа"); return; }
-    setOpen(false);
-    setForm({ title: "", storeId: "", multiplier: "2", startsAt: "", endsAt: "" });
-    onRefresh();
-  }
-
-  async function deactivate(id: string) {
-    await fetch(`/api/admin/promotions?id=${id}`, { method: "DELETE" });
-    onRefresh();
-  }
-
-  const now = new Date();
-
-  return (
-    <Card>
-      <div className="mb-4 flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <Tag className="h-5 w-5 text-abico-gold" />
-          <h2 className="text-lg font-semibold">Урамшуулал</h2>
-        </div>
-        <button type="button" onClick={() => setOpen(!open)} className="flex items-center gap-1 text-sm text-abico-blue hover:text-abico-dark">
-          {open ? <X className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
-          {open ? "Болих" : "Нэмэх"}
-        </button>
-      </div>
-
-      {open && (
-        <form onSubmit={submit} className="mb-4 space-y-3 rounded-xl border border-gray-200 p-4">
-          <Input label="Гарчиг" value={form.title} onChange={(v) => setForm({ ...form, title: v })} required />
-          <div>
-            <label className="mb-1 block text-sm text-gray-700">Дэлгүүр (хоосон = бүгд)</label>
-            <select
-              value={form.storeId}
-              onChange={(e) => setForm({ ...form, storeId: e.target.value })}
-              className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-2.5 text-gray-900 outline-none focus:ring-2 focus:ring-abico-blue"
-            >
-              <option value="">— Бүх дэлгүүр —</option>
-              {stores.map((s) => <option key={s.id} value={s.id}>{s.name}</option>)}
-            </select>
-          </div>
-          <div>
-            <label className="mb-1 block text-sm text-gray-700">Үржвэр</label>
-            <select
-              value={form.multiplier}
-              onChange={(e) => setForm({ ...form, multiplier: e.target.value })}
-              className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-2.5 text-gray-900 outline-none focus:ring-2 focus:ring-abico-blue"
-            >
-              <option value="2">2x оноо</option>
-              <option value="3">3x оноо</option>
-              <option value="5">5x оноо</option>
-            </select>
-          </div>
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label className="mb-1 block text-sm text-gray-700">Эхлэх огноо</label>
-              <input
-                type="datetime-local"
-                required
-                value={form.startsAt}
-                onChange={(e) => setForm({ ...form, startsAt: e.target.value })}
-                className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-2.5 text-gray-900 outline-none focus:ring-2 focus:ring-abico-blue"
-              />
-            </div>
-            <div>
-              <label className="mb-1 block text-sm text-gray-700">Дуусах огноо</label>
-              <input
-                type="datetime-local"
-                required
-                value={form.endsAt}
-                onChange={(e) => setForm({ ...form, endsAt: e.target.value })}
-                className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-2.5 text-gray-900 outline-none focus:ring-2 focus:ring-abico-blue"
-              />
-            </div>
-          </div>
-          {err && <p className="text-sm text-red-300">{err}</p>}
-          <Button type="submit" className="w-full" disabled={loading}>
-            {loading ? "Нэмж байна..." : "Урамшуулал нэмэх"}
-          </Button>
-        </form>
-      )}
-
-      <div className="space-y-3">
-        {promotions.length === 0 && <p className="text-sm text-gray-500">Урамшуулал байхгүй байна</p>}
-        {promotions.map((p) => {
-          const active = p.isActive && new Date(p.startsAt) <= now && new Date(p.endsAt) >= now;
-          return (
-            <div key={p.id} className={`flex items-start justify-between rounded-xl border px-4 py-3 ${active ? "border-abico-blue/20 bg-abico-blue/5" : "border-gray-200"}`}>
-              <div>
-                <p className="font-medium">{p.title}</p>
-                <p className="text-sm text-gray-500">
-                  {p.store?.name ?? "Бүх дэлгүүр"} · {p.multiplier}x ·{" "}
-                  {active ? <span className="text-emerald-300">Идэвхтэй</span> : <span className="text-gray-300">Дууссан</span>}
-                </p>
-              </div>
-              {p.isActive && (
-                <button type="button" onClick={() => deactivate(p.id)} className="ml-2 text-red-400 hover:text-red-300">
-                  <Trash2 className="h-4 w-4" />
-                </button>
-              )}
-            </div>
-          );
-        })}
       </div>
     </Card>
   );

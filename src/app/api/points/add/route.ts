@@ -21,19 +21,7 @@ export async function POST(request: Request) {
     if (!member) return apiError("QR код олдсонгүй", 404);
     if (member.role !== "MEMBER") return apiError("Зөвхөн гишүүнд оноо нэмнэ", 400);
 
-    const now = new Date();
-    const promotion = await db.promotion.findFirst({
-      where: {
-        isActive: true,
-        startsAt: { lte: now },
-        endsAt: { gte: now },
-        OR: [{ storeId: employee.storeId }, { storeId: null }],
-      },
-      orderBy: { multiplier: "desc" },
-    });
-
-    const multiplier = promotion?.multiplier ?? 1;
-    const points = calculatePointsFromPurchase(body.purchaseAmount, multiplier);
+    const points = calculatePointsFromPurchase(body.purchaseAmount);
     if (points <= 0) {
       return apiError(`Хамгийн багадаа ₮1,000 худалдан авалт шаардлагатай`, 400);
     }
@@ -46,12 +34,8 @@ export async function POST(request: Request) {
         type: "EARN",
         points,
         purchaseAmount: body.purchaseAmount,
-        multiplier,
-        description:
-          body.description ??
-          (promotion
-            ? `${promotion.title} (${multiplier}x)`
-            : "Худалдан авалтын оноо"),
+        multiplier: 1,
+        description: body.description ?? "Худалдан авалтын оноо",
       },
       include: {
         store: { select: { name: true } },
@@ -59,12 +43,7 @@ export async function POST(request: Request) {
       },
     });
 
-    return apiSuccess({
-      transaction,
-      pointsAdded: points,
-      multiplier,
-      promotion: promotion?.title ?? null,
-    });
+    return apiSuccess({ transaction, pointsAdded: points });
   } catch (error) {
     if (error instanceof z.ZodError) {
       return apiError(error.issues[0]?.message ?? "Буруу өгөгдөл", 400);

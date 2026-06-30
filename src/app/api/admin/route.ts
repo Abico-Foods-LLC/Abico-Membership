@@ -14,7 +14,7 @@ export async function GET() {
     const storeFilter =
       session.role === "PLATFORM_ADMIN" ? {} : { storeId: admin?.storeId ?? "" };
 
-    const [stores, members, transactions, employees, promotions] = await Promise.all([
+    const [stores, members, transactions, employees] = await Promise.all([
       session.role === "PLATFORM_ADMIN"
         ? db.store.findMany({ orderBy: { name: "asc" } })
         : admin?.store
@@ -36,11 +36,6 @@ export async function GET() {
           ...(storeFilter.storeId ? { storeId: storeFilter.storeId } : {}),
         },
         include: { store: { select: { name: true } } },
-      }),
-      db.promotion.findMany({
-        where: storeFilter.storeId ? { OR: [{ storeId: storeFilter.storeId }, { storeId: null }] } : {},
-        include: { store: { select: { name: true } } },
-        orderBy: { createdAt: "desc" },
       }),
     ]);
 
@@ -76,7 +71,6 @@ export async function GET() {
       },
       stores,
       employees,
-      promotions,
       recentTransactions: transactions.slice(0, 15),
     });
   } catch (error) {

@@ -65,12 +65,8 @@ export const MEMBERSHIP_TIERS: MembershipTier[] = [
   },
 ];
 
-export function calculatePointsFromPurchase(
-  purchaseAmountMnt: number,
-  multiplier = 1,
-): number {
-  const base = Math.floor(purchaseAmountMnt / POINTS_PER_MNT);
-  return Math.floor(base * multiplier);
+export function calculatePointsFromPurchase(purchaseAmountMnt: number): number {
+  return Math.floor(purchaseAmountMnt / POINTS_PER_MNT);
 }
 
 export function getTotalPoints(

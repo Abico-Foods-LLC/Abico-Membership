@@ -1,18 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Copy, History, Share2, Store, X, Zap } from "lucide-react";
+import { Copy, History, Share2, Store, X } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
 import { formatMnt, formatPoints, MembershipTier } from "@/lib/loyalty";
 import QRCode from "react-qr-code";
-
-type Promotion = {
-  id: string;
-  title: string;
-  multiplier: number;
-  endsAt: string;
-  store: { name: string } | null;
-};
 
 type StoreItem = {
   id: string;
@@ -31,7 +23,6 @@ type DashboardData = {
     id: string; type: string; points: number; purchaseAmount: number | null;
     description: string | null; createdAt: string; store: { name: string } | null;
   }>;
-  promotions: Promotion[];
   stores: StoreItem[];
 };
 
@@ -88,25 +79,7 @@ export default function DashboardPage() {
 
       <main className="mx-auto max-w-6xl px-4 py-8">
 
-        {/* ── Active promotions banner ── */}
-        {data.promotions.length > 0 && (
-          <div className="mb-5 space-y-2">
-            {data.promotions.map((p) => (
-              <div key={p.id}
-                className="flex items-center gap-3 rounded-2xl border border-abico-gold/30 bg-abico-gold/10 px-4 py-3">
-                <Zap className="h-4 w-4 shrink-0 text-abico-gold" />
-                <div className="flex-1 text-sm">
-                  <span className="font-bold text-abico-gold">{p.multiplier}x оноо</span>
-                  {" — "}{p.title}
-                  {p.store && <span className="text-gray-500"> · {p.store.name}</span>}
-                </div>
-                <span className="text-xs text-gray-400">
-                  {new Date(p.endsAt).toLocaleDateString("mn-MN")} хүртэл
-                </span>
-              </div>
-            ))}
-          </div>
-        )}
+
 
         <div className="grid gap-6 lg:grid-cols-[1fr_1.1fr]">
           {/* ── Left: Membership Card ── */}

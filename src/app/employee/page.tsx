@@ -115,10 +115,7 @@ export default function EmployeePage() {
 
     if (!res.ok) { setError(data.error ?? "Алдаа гарлаа"); return; }
 
-    setEarnResult(
-      `${data.transaction.user.name}-д ${formatPoints(data.pointsAdded)} оноо нэмэгдлээ` +
-        (data.promotion ? ` (${data.promotion})` : ""),
-    );
+    setEarnResult(`${data.transaction.user.name}-д ${formatPoints(data.pointsAdded)} оноо нэмэгдлээ`);
     setMember((m) => m && { ...m, totalPoints: m.totalPoints + data.pointsAdded });
     setPurchaseAmount("");
   }

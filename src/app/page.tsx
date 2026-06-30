@@ -161,7 +161,7 @@ export default async function HomePage() {
           <div className="grid gap-4 md:grid-cols-3">
             <FeatureCard icon={<QrCode className="h-6 w-6 text-abico-blue" />} title="QR код" text="Дэлгүүрт QR кодоо үзүүлж оноо цуглуулна" />
             <FeatureCard icon={<Award className="h-6 w-6 text-abico-blue" />} title="Шатлал" text="СТАНДАРТ → ХҮРЭЛ → АЛТ → ПЛАТИНУМ → VIP урамшуулал" />
-            <FeatureCard icon={<Bell className="h-6 w-6 text-abico-blue" />} title="Урамшуулал" text="2x–3x оноо, урилга +50 оноо" />
+            <FeatureCard icon={<Bell className="h-6 w-6 text-abico-blue" />} title="Урамшуулал" text="Урилга +50 оноо, шатлал ахиулах" />
           </div>
         </section>
 
