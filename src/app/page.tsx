@@ -29,7 +29,7 @@ export default async function HomePage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Navbar userName={session?.name} role={session?.role} />
+      <Navbar />
 
       <main>
         {/* ── Hero ── */}
