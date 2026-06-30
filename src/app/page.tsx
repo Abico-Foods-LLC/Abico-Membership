@@ -1,3 +1,4 @@
+import { redirect } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import {
@@ -24,6 +25,7 @@ const BRAND_LOGOS = [
 
 export default async function HomePage() {
   const session = await getSession();
+  if (session) redirect("/dashboard");
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -135,7 +137,7 @@ export default async function HomePage() {
                   </p>
                 </div>
 
-                <div className="relative mt-6 grid grid-cols-4 gap-2">
+                <div className="relative mt-6 grid grid-cols-5 gap-2">
                   {MEMBERSHIP_TIERS.map((t) => (
                     <div key={t.id} className="rounded-xl border border-white/10 p-2.5 text-center">
                       <p className="text-[9px] font-bold uppercase" style={{ color: t.color }}>{t.nameMn}</p>
@@ -158,7 +160,7 @@ export default async function HomePage() {
         <section className="mx-auto max-w-7xl px-6 pb-12">
           <div className="grid gap-4 md:grid-cols-3">
             <FeatureCard icon={<QrCode className="h-6 w-6 text-abico-blue" />} title="QR код" text="Дэлгүүрт QR кодоо үзүүлж оноо цуглуулна" />
-            <FeatureCard icon={<Award className="h-6 w-6 text-abico-blue" />} title="Шатлал" text="СТАНДАРТ → АЛТ → ПЛАТИНУМ → VIP хөнгөлөлт" />
+            <FeatureCard icon={<Award className="h-6 w-6 text-abico-blue" />} title="Шатлал" text="СТАНДАРТ → ХҮРЭЛ → АЛТ → ПЛАТИНУМ → VIP урамшуулал" />
             <FeatureCard icon={<Bell className="h-6 w-6 text-abico-blue" />} title="Урамшуулал" text="2x–3x оноо, урилга +50 оноо" />
           </div>
         </section>
@@ -167,7 +169,7 @@ export default async function HomePage() {
         <section className="border-y border-gray-200 bg-white py-12">
           <div className="mx-auto max-w-7xl px-6">
             <h2 className="text-2xl font-bold text-gray-900">Гишүүний шатлал</h2>
-            <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
               {MEMBERSHIP_TIERS.map((tier) => (
                 <div key={tier.id} className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
                   <p className="text-sm font-bold uppercase tracking-wide" style={{ color: tier.color }}>

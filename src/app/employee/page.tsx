@@ -242,7 +242,7 @@ export default function EmployeePage() {
                 </div>
                 <p className="mt-2 text-sm">
                   Оноо: <span className="font-bold text-abico-gold">{formatPoints(member.totalPoints)}</span>
-                  {tier && <span className="ml-2 text-gray-500">· {tier.discountPercent}% хөнгөлөлт</span>}
+                  {tier && <span className="ml-2 text-gray-500">· {tier.discountPercent}% урамшуулал</span>}
                 </p>
               </div>
             )}

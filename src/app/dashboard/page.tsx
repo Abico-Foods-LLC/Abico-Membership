@@ -154,12 +154,10 @@ export default function DashboardPage() {
                       </p>
                     </div>
                   )}
-                  {tier.discountPercent > 0 && (
-                    <div className="mt-5 inline-flex items-center gap-2 rounded-xl bg-white/10 px-3 py-2">
-                      <span className="text-xs text-white/60">Хөнгөлөлт</span>
-                      <span className="text-lg font-extrabold" style={{ color: tier.color }}>{tier.discountPercent}%</span>
-                    </div>
-                  )}
+                  <div className="mt-5 inline-flex items-center gap-2 rounded-xl bg-white/10 px-3 py-2">
+                    <span className="text-xs text-white/60">Урамшуулал</span>
+                    <span className="text-lg font-extrabold" style={{ color: tier.color }}>{tier.discountPercent}%</span>
+                  </div>
                 </div>
 
                 {/* QR — tap to fullscreen */}
@@ -194,7 +192,7 @@ export default function DashboardPage() {
                 <p className="mt-3 rounded-xl bg-gray-50 px-3 py-2 text-xs text-gray-400">
                   {formatPoints(pointsToNext)} оноо нэмбэл{" "}
                   <span style={{ color: nextTier.color }}>{nextTier.nameMn}</span>{" "}
-                  ({nextTier.discountPercent}% хөнгөлөлт) болно
+                  ({nextTier.discountPercent}% урамшуулал) болно
                 </p>
               )}
             </div>
@@ -269,7 +267,7 @@ export default function DashboardPage() {
                     <p className="mt-3 rounded-xl bg-gray-50 px-3 py-2 text-xs text-gray-400">
                       {formatPoints(pointsToNext)} оноо нэмбэл{" "}
                       <span style={{ color: nextTier.color }}>{nextTier.nameMn}</span>{" "}
-                      ({nextTier.discountPercent}% хөнгөлөлт) болно
+                      ({nextTier.discountPercent}% урамшуулал) болно
                     </p>
                   )}
                 </div>
