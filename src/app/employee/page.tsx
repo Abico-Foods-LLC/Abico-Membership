@@ -99,7 +99,7 @@ export default function EmployeePage() {
     };
     rafRef.current = requestAnimationFrame(loop);
     return () => { stopped = true; };
-  }, [scanning]);
+  }, [scanning, stopScan]);
 
   async function doLookup(code: string, mode: "qr" | "phone" = "qr") {
     setError("");
