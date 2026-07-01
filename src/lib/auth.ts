@@ -9,7 +9,13 @@ const COOKIE_NAME = "abico_loyalty_session";
 const SESSION_TTL = 7 * 24 * 60 * 60;
 
 function getSecret() {
-  const secret = process.env.AUTH_SECRET ?? "abico-loyalty-dev-secret-change-me";
+  const secret = process.env.AUTH_SECRET;
+  if (!secret) {
+    if (process.env.NODE_ENV === "production") {
+      throw new Error("AUTH_SECRET тохируулаагүй байна — production дээр заавал орчны хувьсагчаар тохируулна уу");
+    }
+    return new TextEncoder().encode("abico-loyalty-dev-secret-change-me");
+  }
   return new TextEncoder().encode(secret);
 }
 
