@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { BarChart3, Plus, Store, Trash2, Users, Wallet, X } from "lucide-react";
+import { BarChart3, Plus, Store, Users, Wallet, X } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
 import { Card } from "@/components/Card";
 import { Button } from "@/components/Button";
