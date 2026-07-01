@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { CheckCircle2, KeyRound, User } from "lucide-react";
+import { CheckCircle2, KeyRound, Phone, User } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
 import { Card } from "@/components/Card";
 import { Button } from "@/components/Button";
@@ -79,24 +79,26 @@ export default function ProfilePage() {
   );
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-gray-50">
       <Navbar userName={me.name} role={me.role} />
       <main className="mx-auto max-w-5xl px-4 py-10">
-        <div className="mb-6">
-          <p className="text-sm uppercase tracking-wider text-abico-gold">Гишүүн</p>
-          <h1 className="text-3xl font-bold">Профайл</h1>
+        <div className="mb-6 animate-fade-up">
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-abico-blue">Гишүүн</p>
+          <h1 className="mt-1 text-3xl font-bold tracking-tight text-gray-900">Профайл</h1>
         </div>
 
         <div className="grid gap-6 lg:grid-cols-2">
           {/* Account info */}
-          <Card>
+          <Card className="animate-fade-up">
             <div className="mb-4 flex items-center gap-2">
-              <User className="h-5 w-5 text-abico-gold" />
-              <h2 className="font-semibold">Хувийн мэдээлэл</h2>
+              <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-abico-blue/10 text-abico-blue">
+                <User className="h-4.5 w-4.5" />
+              </span>
+              <h2 className="font-semibold text-gray-900">Хувийн мэдээлэл</h2>
             </div>
 
-            <p className="mb-4 rounded-xl bg-gray-50 px-4 py-3 font-mono text-sm text-gray-600">
-              📱 {me.phone}
+            <p className="mb-4 flex items-center gap-2 rounded-xl bg-gray-50 px-4 py-3 font-mono text-sm text-gray-600">
+              <Phone className="h-4 w-4 text-gray-400" /> {me.phone}
             </p>
 
             <form onSubmit={saveName} className="space-y-4">
@@ -107,7 +109,7 @@ export default function ProfilePage() {
                   onChange={(e) => setName(e.target.value)}
                   required
                   minLength={2}
-                  className="w-full rounded-xl border border-gray-200 bg-gray-100 px-4 py-2.5 outline-none focus:ring-2 focus:ring-abico-blue"
+                  className="input-premium"
                 />
               </label>
               <label className="block">
@@ -117,12 +119,14 @@ export default function ProfilePage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="example@mail.com"
-                  className="w-full rounded-xl border border-gray-200 bg-gray-100 px-4 py-2.5 outline-none focus:ring-2 focus:ring-abico-blue"
+                  className="input-premium"
                 />
               </label>
-              {nameErr && <p className="text-sm text-red-300">{nameErr}</p>}
+              {nameErr && (
+                <p className="rounded-xl bg-rose-50 px-3 py-2 text-sm font-medium text-rose-600">{nameErr}</p>
+              )}
               {nameMsg && (
-                <p className="flex items-center gap-2 text-sm text-emerald-300">
+                <p className="flex items-center gap-2 rounded-xl bg-emerald-50 px-3 py-2 text-sm font-medium text-emerald-600">
                   <CheckCircle2 className="h-4 w-4" /> {nameMsg}
                 </p>
               )}
@@ -133,10 +137,12 @@ export default function ProfilePage() {
           </Card>
 
           {/* Password change */}
-          <Card>
+          <Card className="animate-fade-up [animation-delay:80ms]">
             <div className="mb-4 flex items-center gap-2">
-              <KeyRound className="h-5 w-5 text-abico-gold" />
-              <h2 className="font-semibold">Нууц үг солих</h2>
+              <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-abico-blue/10 text-abico-blue">
+                <KeyRound className="h-4.5 w-4.5" />
+              </span>
+              <h2 className="font-semibold text-gray-900">Нууц үг солих</h2>
             </div>
             <form onSubmit={changePassword} className="space-y-4">
               <label className="block">
@@ -146,7 +152,7 @@ export default function ProfilePage() {
                   value={curPwd}
                   onChange={(e) => setCurPwd(e.target.value)}
                   required
-                  className="w-full rounded-xl border border-gray-200 bg-gray-100 px-4 py-2.5 outline-none focus:ring-2 focus:ring-abico-blue"
+                  className="input-premium"
                 />
               </label>
               <label className="block">
@@ -157,12 +163,14 @@ export default function ProfilePage() {
                   onChange={(e) => setNewPwd(e.target.value)}
                   required
                   minLength={6}
-                  className="w-full rounded-xl border border-gray-200 bg-gray-100 px-4 py-2.5 outline-none focus:ring-2 focus:ring-abico-blue"
+                  className="input-premium"
                 />
               </label>
-              {pwdErr && <p className="text-sm text-red-300">{pwdErr}</p>}
+              {pwdErr && (
+                <p className="rounded-xl bg-rose-50 px-3 py-2 text-sm font-medium text-rose-600">{pwdErr}</p>
+              )}
               {pwdMsg && (
-                <p className="flex items-center gap-2 text-sm text-emerald-300">
+                <p className="flex items-center gap-2 rounded-xl bg-emerald-50 px-3 py-2 text-sm font-medium text-emerald-600">
                   <CheckCircle2 className="h-4 w-4" /> {pwdMsg}
                 </p>
               )}
