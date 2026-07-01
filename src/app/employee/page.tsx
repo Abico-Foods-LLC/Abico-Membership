@@ -162,33 +162,35 @@ export default function EmployeePage() {
   const tier = member ? getMembershipTier(member.totalPoints) : null;
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-gray-50">
       <Navbar userName={me?.name} role={me?.role ?? "EMPLOYEE"} loading={!me} />
       <main className="mx-auto max-w-3xl px-4 py-10">
-        <div className="mb-8">
-          <p className="text-sm uppercase tracking-wider text-abico-gold">Ажилтан</p>
-          <h1 className="text-3xl font-bold">Гишүүн хайх</h1>
+        <div className="mb-8 animate-fade-up">
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-abico-blue">Ажилтан</p>
+          <h1 className="mt-1 text-3xl font-bold tracking-tight text-gray-900">Гишүүн хайх</h1>
           <p className="mt-2 text-gray-600">QR код уншиж эсвэл гараар оруулна. ₮1,000 = 1 оноо.</p>
         </div>
 
         <div className="space-y-6">
           {/* QR lookup */}
-          <Card>
+          <Card className="animate-fade-up">
             <div className="mb-4 flex items-center gap-2">
-              <UserSearch className="h-5 w-5 text-abico-gold" />
-              <h2 className="font-semibold">1. Гишүүн хайх</h2>
+              <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-abico-blue/10 text-abico-blue">
+                <UserSearch className="h-4.5 w-4.5" />
+              </span>
+              <h2 className="font-semibold text-gray-900">1. Гишүүн хайх</h2>
             </div>
 
             {/* Mode toggle */}
             <div className="mb-3 flex rounded-xl border border-gray-200 bg-gray-50 p-1">
               <button type="button"
                 onClick={() => setLookupMode("qr")}
-                className={`flex flex-1 items-center justify-center gap-1.5 rounded-lg py-2 text-sm font-medium transition ${lookupMode === "qr" ? "bg-gray-100 text-white" : "text-gray-400"}`}>
+                className={`flex flex-1 items-center justify-center gap-1.5 rounded-lg py-2 text-sm font-medium transition-all duration-200 ${lookupMode === "qr" ? "bg-white text-gray-900 shadow-soft" : "text-gray-400 hover:text-gray-600"}`}>
                 <ScanLine className="h-4 w-4" /> QR код
               </button>
               <button type="button"
                 onClick={() => setLookupMode("phone")}
-                className={`flex flex-1 items-center justify-center gap-1.5 rounded-lg py-2 text-sm font-medium transition ${lookupMode === "phone" ? "bg-gray-100 text-white" : "text-gray-400"}`}>
+                className={`flex flex-1 items-center justify-center gap-1.5 rounded-lg py-2 text-sm font-medium transition-all duration-200 ${lookupMode === "phone" ? "bg-white text-gray-900 shadow-soft" : "text-gray-400 hover:text-gray-600"}`}>
                 <UserSearch className="h-4 w-4" /> Утасны дугаар
               </button>
             </div>
@@ -196,11 +198,11 @@ export default function EmployeePage() {
             {lookupMode === "qr" ? (
               <>
                 {scanning && (
-                  <div className="mb-4 overflow-hidden rounded-xl border border-abico-gold/40">
+                  <div className="mb-4 overflow-hidden rounded-xl border border-abico-blue/30">
                     <video ref={videoRef} className="w-full" playsInline muted />
-                    <div className="flex items-center justify-between bg-black/40 px-4 py-2">
-                      <p className="text-sm text-gray-600">QR код камер руу чиглүүлнэ...</p>
-                      <button type="button" onClick={stopScan} className="flex items-center gap-1 text-sm text-red-300 hover:text-red-200">
+                    <div className="flex items-center justify-between bg-gray-900/80 px-4 py-2">
+                      <p className="text-sm text-white/80">QR код камер руу чиглүүлнэ...</p>
+                      <button type="button" onClick={stopScan} className="flex items-center gap-1 rounded-lg px-2 py-1 text-sm text-rose-300 transition-colors hover:bg-white/10 hover:text-rose-200">
                         <CameraOff className="h-4 w-4" /> Зогсоох
                       </button>
                     </div>
@@ -211,7 +213,7 @@ export default function EmployeePage() {
                     value={qrCode}
                     onChange={(e) => setQrCode(e.target.value.toUpperCase())}
                     placeholder="ABICO-XXXXXXXXXXXX"
-                    className="flex-1 rounded-xl border border-gray-200 bg-gray-100 px-4 py-2.5 font-mono text-sm outline-none focus:ring-2 focus:ring-abico-gold"
+                    className="input-premium flex-1 font-mono text-sm"
                   />
                   <Button type="button" variant="secondary" onClick={() => doLookup(qrCode)} disabled={!qrCode}>
                     Хайх
@@ -220,9 +222,9 @@ export default function EmployeePage() {
                     type="button"
                     onClick={scanning ? stopScan : startScan}
                     title="Камераар скан хийх"
-                    className="flex items-center gap-1 rounded-xl border border-gray-200 bg-gray-100 px-3 py-2.5 text-sm hover:bg-white/20"
+                    className="flex items-center gap-1 rounded-xl border border-gray-200 bg-white px-3 py-2.5 text-sm transition-colors hover:bg-gray-50"
                   >
-                    <Camera className="h-4 w-4 text-abico-gold" />
+                    <Camera className="h-4 w-4 text-abico-blue" />
                   </button>
                 </div>
               </>
@@ -233,7 +235,7 @@ export default function EmployeePage() {
                   onChange={(e) => setPhoneInput(e.target.value)}
                   placeholder="99112233"
                   type="tel"
-                  className="flex-1 rounded-xl border border-gray-200 bg-gray-100 px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-abico-gold"
+                  className="input-premium flex-1 text-sm"
                 />
                 <Button type="button" variant="secondary" onClick={() => doLookup(phoneInput, "phone")} disabled={!phoneInput}>
                   Хайх
@@ -242,32 +244,36 @@ export default function EmployeePage() {
             )}
 
             {member && (
-              <div className="mt-4 rounded-xl border border-emerald-400/30 bg-emerald-400/10 p-4">
+              <div className="mt-4 rounded-xl border border-emerald-200 bg-emerald-50 p-4">
                 <div className="flex items-start justify-between">
                   <div>
-                    <p className="font-semibold">{member.name}</p>
+                    <p className="font-semibold text-gray-900">{member.name}</p>
                     <p className="text-sm text-gray-600">{member.phone}</p>
                   </div>
                   {tier && (
-                    <span className="rounded-full px-3 py-1 text-xs font-bold" style={{ backgroundColor: tier.color + "33", color: tier.color }}>
+                    <span className="rounded-full px-3 py-1 text-xs font-bold" style={{ backgroundColor: tier.color + "22", color: tier.color }}>
                       {tier.nameMn}
                     </span>
                   )}
                 </div>
-                <p className="mt-2 text-sm">
-                  Оноо: <span className="font-bold text-abico-gold">{formatPoints(member.totalPoints)}</span>
+                <p className="mt-2 text-sm text-gray-700">
+                  Оноо: <span className="font-bold text-abico-blue">{formatPoints(member.totalPoints)}</span>
                   {tier && <span className="ml-2 text-gray-500">· {tier.discountPercent}% урамшуулал</span>}
                 </p>
               </div>
             )}
-            {error && <p className="mt-3 text-sm text-red-300">{error}</p>}
+            {error && (
+              <p className="mt-3 rounded-xl bg-rose-50 px-3 py-2 text-sm font-medium text-rose-600">{error}</p>
+            )}
           </Card>
 
           {/* Оноо нэмэх */}
-          <Card>
+          <Card className="animate-fade-up [animation-delay:80ms]">
             <div className="mb-4 flex items-center gap-2">
-              <ScanLine className="h-5 w-5 text-abico-gold" />
-              <h2 className="font-semibold">2. Оноо нэмэх</h2>
+              <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-abico-blue/10 text-abico-blue">
+                <ScanLine className="h-4.5 w-4.5" />
+              </span>
+              <h2 className="font-semibold text-gray-900">2. Оноо нэмэх</h2>
             </div>
             <form onSubmit={addPoints} className="space-y-4">
               <label className="block">
@@ -280,17 +286,17 @@ export default function EmployeePage() {
                   onChange={(e) => setPurchaseAmount(e.target.value)}
                   placeholder="50000"
                   required
-                  className="w-full rounded-xl border border-gray-200 bg-gray-100 px-4 py-2.5 outline-none focus:ring-2 focus:ring-abico-gold"
+                  className="input-premium"
                 />
               </label>
               {previewPoints > 0 && (
                 <p className="text-sm text-gray-600">
-                  Олгох оноо: <span className="font-bold text-abico-gold">{formatPoints(previewPoints)}</span>{" "}
+                  Олгох оноо: <span className="font-bold text-abico-blue">{formatPoints(previewPoints)}</span>{" "}
                   ({formatMnt(Number(purchaseAmount))})
                 </p>
               )}
               {earnResult && (
-                <p className="flex items-center gap-2 text-sm text-emerald-300">
+                <p className="flex items-center gap-2 rounded-xl bg-emerald-50 px-3 py-2 text-sm font-medium text-emerald-600">
                   <CheckCircle2 className="h-4 w-4" /> {earnResult}
                 </p>
               )}
@@ -301,10 +307,12 @@ export default function EmployeePage() {
           </Card>
 
           {/* Оноо хасах */}
-          <Card>
+          <Card className="animate-fade-up [animation-delay:160ms]">
             <div className="mb-4 flex items-center gap-2">
-              <MinusCircle className="h-5 w-5 text-red-400" />
-              <h2 className="font-semibold">3. Оноо хасах (Хөнгөлөлт ашиглах)</h2>
+              <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-rose-50 text-rose-500">
+                <MinusCircle className="h-4.5 w-4.5" />
+              </span>
+              <h2 className="font-semibold text-gray-900">3. Оноо хасах (Хөнгөлөлт ашиглах)</h2>
             </div>
             <form onSubmit={redeemPointsFn} className="space-y-4">
               <label className="block">
@@ -316,20 +324,20 @@ export default function EmployeePage() {
                   onChange={(e) => setRedeemPoints(e.target.value)}
                   placeholder="100"
                   required
-                  className="w-full rounded-xl border border-gray-200 bg-gray-100 px-4 py-2.5 outline-none focus:ring-2 focus:ring-abico-gold"
+                  className="input-premium"
                 />
               </label>
               {member && redeemPoints && Number(redeemPoints) > member.totalPoints && (
-                <p className="text-sm text-red-300">Оноо хүрэхгүй байна ({formatPoints(member.totalPoints)} л бий)</p>
+                <p className="rounded-xl bg-rose-50 px-3 py-2 text-sm font-medium text-rose-600">Оноо хүрэхгүй байна ({formatPoints(member.totalPoints)} л бий)</p>
               )}
               {redeemResult && (
-                <p className="flex items-center gap-2 text-sm text-emerald-300">
+                <p className="flex items-center gap-2 rounded-xl bg-emerald-50 px-3 py-2 text-sm font-medium text-emerald-600">
                   <CheckCircle2 className="h-4 w-4" /> {redeemResult}
                 </p>
               )}
               <Button
                 type="submit"
-                className="w-full !bg-red-500/20 !text-red-200 hover:!bg-red-500/30"
+                className="w-full !bg-rose-50 !text-rose-600 !shadow-none hover:!bg-rose-100 hover:!translate-y-0"
                 disabled={loading || !qrCode || !member}
               >
                 {loading ? "Хасаж байна..." : "Оноо хасах"}
