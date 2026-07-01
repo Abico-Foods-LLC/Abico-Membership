@@ -11,6 +11,29 @@ const schema = z.object({
   endsAt: z.string().datetime(),
 });
 
+export async function GET() {
+  try {
+    const session = await requireRole(["PLATFORM_ADMIN", "STORE_ADMIN"]);
+    const admin = session.role === "STORE_ADMIN"
+      ? await db.user.findUnique({ where: { id: session.userId } })
+      : null;
+
+    const promotions = await db.promotion.findMany({
+      where: session.role === "PLATFORM_ADMIN"
+        ? {}
+        : { OR: [{ storeId: admin?.storeId ?? "" }, { storeId: null }] },
+      include: { store: { select: { name: true } } },
+      orderBy: { createdAt: "desc" },
+    });
+
+    return apiSuccess({ promotions });
+  } catch (error) {
+    if (error instanceof Error && error.message === "UNAUTHORIZED") return apiError("Нэвтрээгүй", 401);
+    if (error instanceof Error && error.message === "FORBIDDEN") return apiError("Эрх хүрэхгүй", 403);
+    return apiError("Урамшуулал ачаалах амжилтгүй", 500);
+  }
+}
+
 export async function POST(request: Request) {
   try {
     await requireRole(["PLATFORM_ADMIN", "STORE_ADMIN"]);

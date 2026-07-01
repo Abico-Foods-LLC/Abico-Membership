@@ -102,6 +102,10 @@ export default function AdminPage() {
             </div>
 
             <div className="mt-4">
+              <PromotionsSection stores={data.stores} canDeactivate={data.me.role === "PLATFORM_ADMIN"} />
+            </div>
+
+            <div className="mt-4">
               <MembersSection />
             </div>
           </>
@@ -273,6 +277,177 @@ function EmployeesSection({
             <p className="text-sm text-gray-500">{emp.store?.name ?? "—"} · {emp.role === "EMPLOYEE" ? "Кассчин" : "Дэлгүүр Админ"}</p>
           </div>
         ))}
+      </div>
+    </Card>
+  );
+}
+
+type PromotionItem = {
+  id: string;
+  title: string;
+  multiplier: number;
+  startsAt: string;
+  endsAt: string;
+  isActive: boolean;
+  store: { name: string } | null;
+};
+
+function PromotionsSection({ stores, canDeactivate }: { stores: StoreItem[]; canDeactivate: boolean }) {
+  const [promotions, setPromotions] = useState<PromotionItem[]>([]);
+  const [loaded, setLoaded] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [form, setForm] = useState({ title: "", storeId: "", multiplier: "2", startsAt: "", endsAt: "" });
+  const [loading, setLoading] = useState(false);
+  const [err, setErr] = useState("");
+
+  const fetchPromotions = useCallback(() => {
+    fetch("/api/admin/promotions")
+      .then(async (r) => { if (!r.ok) throw new Error(); return r.json(); })
+      .then((d) => setPromotions(d.promotions))
+      .catch(() => {})
+      .finally(() => setLoaded(true));
+  }, []);
+
+  useEffect(() => { fetchPromotions(); }, [fetchPromotions]);
+
+  async function submit(e: React.FormEvent) {
+    e.preventDefault();
+    setLoading(true);
+    setErr("");
+    const res = await fetch("/api/admin/promotions", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        title: form.title,
+        storeId: form.storeId || undefined,
+        multiplier: Number(form.multiplier),
+        startsAt: new Date(form.startsAt).toISOString(),
+        endsAt: new Date(form.endsAt).toISOString(),
+      }),
+    });
+    const data = await res.json();
+    setLoading(false);
+    if (!res.ok) { setErr(data.error ?? "Алдаа"); return; }
+    setOpen(false);
+    setForm({ title: "", storeId: "", multiplier: "2", startsAt: "", endsAt: "" });
+    fetchPromotions();
+  }
+
+  async function deactivate(id: string) {
+    await fetch(`/api/admin/promotions?id=${id}`, { method: "DELETE" });
+    fetchPromotions();
+  }
+
+  function status(p: PromotionItem) {
+    const now = new Date();
+    if (!p.isActive) return { label: "Идэвхгүй", className: "bg-gray-100 text-gray-500" };
+    if (new Date(p.endsAt) < now) return { label: "Дууссан", className: "bg-gray-100 text-gray-500" };
+    if (new Date(p.startsAt) > now) return { label: "Удахгүй эхэлнэ", className: "bg-amber-50 text-amber-700" };
+    return { label: "Идэвхтэй", className: "bg-emerald-50 text-emerald-700" };
+  }
+
+  return (
+    <Card className="animate-fade-up [animation-delay:200ms]">
+      <div className="mb-4 flex items-center justify-between">
+        <h2 className="text-lg font-semibold text-gray-900">Урамшуулал</h2>
+        <button
+          type="button"
+          onClick={() => setOpen(!open)}
+          className="flex items-center gap-1 rounded-lg px-2 py-1 text-sm font-medium text-abico-blue transition-colors hover:bg-abico-blue/10 hover:text-abico-dark"
+        >
+          {open ? <X className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
+          {open ? "Болих" : "Нэмэх"}
+        </button>
+      </div>
+
+      {open && (
+        <form onSubmit={submit} className="mb-4 animate-fade-up space-y-3 rounded-xl border border-gray-200 bg-gray-50/60 p-4 [animation-duration:0.3s]">
+          <Input label="Гарчиг" value={form.title} onChange={(v) => setForm({ ...form, title: v })} required />
+          <div>
+            <label className="mb-1 block text-sm text-gray-700">Дэлгүүр</label>
+            <select
+              value={form.storeId}
+              onChange={(e) => setForm({ ...form, storeId: e.target.value })}
+              className="input-premium"
+            >
+              <option value="">Бүх дэлгүүр</option>
+              {stores.map((s) => <option key={s.id} value={s.id}>{s.name}</option>)}
+            </select>
+          </div>
+          <div>
+            <label className="mb-1 block text-sm text-gray-700">Онооны үржвэр (1.1 – 10)</label>
+            <input
+              type="number"
+              min="1.1"
+              max="10"
+              step="0.1"
+              value={form.multiplier}
+              onChange={(e) => setForm({ ...form, multiplier: e.target.value })}
+              required
+              className="input-premium"
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="mb-1 block text-sm text-gray-700">Эхлэх</label>
+              <input
+                type="datetime-local"
+                value={form.startsAt}
+                onChange={(e) => setForm({ ...form, startsAt: e.target.value })}
+                required
+                className="input-premium"
+              />
+            </div>
+            <div>
+              <label className="mb-1 block text-sm text-gray-700">Дуусах</label>
+              <input
+                type="datetime-local"
+                value={form.endsAt}
+                onChange={(e) => setForm({ ...form, endsAt: e.target.value })}
+                required
+                className="input-premium"
+              />
+            </div>
+          </div>
+          {err && (
+            <p className="rounded-xl bg-rose-50 px-3 py-2 text-sm font-medium text-rose-600">{err}</p>
+          )}
+          <Button type="submit" className="w-full" disabled={loading}>
+            {loading ? "Нэмж байна..." : "Урамшуулал нэмэх"}
+          </Button>
+        </form>
+      )}
+
+      {loaded && promotions.length === 0 && (
+        <p className="py-6 text-center text-sm text-gray-400">Урамшуулал алга байна</p>
+      )}
+
+      <div className="space-y-3">
+        {promotions.map((p) => {
+          const s = status(p);
+          return (
+            <div key={p.id} className="card-premium-hover flex items-center justify-between px-4 py-3">
+              <div>
+                <div className="flex items-center gap-2">
+                  <p className="font-medium text-gray-900">{p.title}</p>
+                  <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${s.className}`}>{s.label}</span>
+                </div>
+                <p className="mt-1 text-sm text-gray-500">
+                  {p.store?.name ?? "Бүх дэлгүүр"} · {p.multiplier}x · {new Date(p.startsAt).toLocaleDateString("mn-MN")} – {new Date(p.endsAt).toLocaleDateString("mn-MN")}
+                </p>
+              </div>
+              {canDeactivate && p.isActive && (
+                <button
+                  type="button"
+                  onClick={() => deactivate(p.id)}
+                  className="shrink-0 rounded-lg px-2 py-1 text-sm text-gray-400 transition-colors hover:bg-rose-50 hover:text-rose-600"
+                >
+                  Идэвхгүй болгох
+                </button>
+              )}
+            </div>
+          );
+        })}
       </div>
     </Card>
   );

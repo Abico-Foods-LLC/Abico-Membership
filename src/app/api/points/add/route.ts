@@ -21,10 +21,26 @@ export async function POST(request: Request) {
     if (!member) return apiError("QR код олдсонгүй", 404);
     if (member.role !== "MEMBER") return apiError("Зөвхөн гишүүнд оноо нэмнэ", 400);
 
-    const points = calculatePointsFromPurchase(body.purchaseAmount);
-    if (points <= 0) {
+    const basePoints = calculatePointsFromPurchase(body.purchaseAmount);
+    if (basePoints <= 0) {
       return apiError(`Хамгийн багадаа ₮1,000 худалдан авалт шаардлагатай`, 400);
     }
+
+    const now = new Date();
+    const activePromotions = await db.promotion.findMany({
+      where: {
+        isActive: true,
+        startsAt: { lte: now },
+        endsAt: { gte: now },
+        OR: [{ storeId: employee.storeId }, { storeId: null }],
+      },
+    });
+    const promotion = activePromotions.reduce<typeof activePromotions[number] | null>(
+      (best, p) => (!best || p.multiplier > best.multiplier ? p : best),
+      null,
+    );
+    const multiplier = promotion?.multiplier ?? 1;
+    const points = Math.floor(basePoints * multiplier);
 
     const transaction = await db.pointTransaction.create({
       data: {
@@ -34,8 +50,8 @@ export async function POST(request: Request) {
         type: "EARN",
         points,
         purchaseAmount: body.purchaseAmount,
-        multiplier: 1,
-        description: body.description ?? "Худалдан авалтын оноо",
+        multiplier,
+        description: body.description ?? (promotion ? `Худалдан авалтын оноо (${promotion.title}, ${multiplier}x)` : "Худалдан авалтын оноо"),
       },
       include: {
         store: { select: { name: true } },
