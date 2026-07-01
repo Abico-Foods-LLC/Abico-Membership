@@ -15,7 +15,13 @@ type MemberPreview = {
   totalPoints: number;
 };
 
+// ponytail: BarcodeDetector — Chrome 88+/Edge/Android Chrome. Falls back to manual input.
+type BarcodeDetectorCtor = new (opts: { formats: string[] }) => {
+  detect(el: HTMLVideoElement): Promise<{ rawValue: string }[]>;
+};
+
 export default function EmployeePage() {
+  const [me, setMe] = useState<{ name: string; role: string } | null>(null);
   const [qrCode, setQrCode] = useState("");
   const [phoneInput, setPhoneInput] = useState("");
   const [lookupMode, setLookupMode] = useState<"qr" | "phone">("qr");
@@ -42,11 +48,14 @@ export default function EmployeePage() {
 
   useEffect(() => () => stopScan(), [stopScan]);
 
+  useEffect(() => {
+    fetch("/api/me")
+      .then(async (r) => { if (!r.ok) throw new Error(String(r.status)); return r.json(); })
+      .then((d) => setMe({ name: d.user.name, role: d.user.role }))
+      .catch(() => {});
+  }, []);
+
   async function startScan() {
-    // ponytail: BarcodeDetector — Chrome 88+/Edge/Android Chrome. Falls back to manual input.
-    type BarcodeDetectorCtor = new (opts: { formats: string[] }) => {
-      detect(el: HTMLVideoElement): Promise<{ rawValue: string }[]>;
-    };
     const w = window as unknown as { BarcodeDetector?: BarcodeDetectorCtor };
     if (!w.BarcodeDetector) {
       setError("QR скан хийхэд Chrome браузер шаардлагатай");
@@ -57,32 +66,40 @@ export default function EmployeePage() {
         video: { facingMode: "environment" },
       });
       streamRef.current = stream;
-      if (!videoRef.current) return;
-      videoRef.current.srcObject = stream;
-      videoRef.current.play();
-      setScanning(true);
       setError("");
-
-      const detector = new w.BarcodeDetector({ formats: ["qr_code"] });
-      const loop = async () => {
-        if (!videoRef.current) return;
-        try {
-          const codes = await detector.detect(videoRef.current);
-          if (codes.length > 0) {
-            const value: string = codes[0].rawValue;
-            stopScan();
-            setQrCode(value.toUpperCase());
-            doLookup(value.toUpperCase());
-            return;
-          }
-        } catch {}
-        rafRef.current = requestAnimationFrame(loop);
-      };
-      rafRef.current = requestAnimationFrame(loop);
+      setScanning(true); // <video> mounts on next render — wiring happens in the effect below
     } catch {
       setError("Камерт нэвтрэх эрх олдсонгүй");
     }
   }
+
+  // videoRef only exists once `scanning` is true and the <video> has mounted
+  useEffect(() => {
+    if (!scanning || !videoRef.current || !streamRef.current) return;
+    const video = videoRef.current;
+    video.srcObject = streamRef.current;
+    video.play();
+
+    const w = window as unknown as { BarcodeDetector: BarcodeDetectorCtor };
+    const detector = new w.BarcodeDetector({ formats: ["qr_code"] });
+    let stopped = false;
+    const loop = async () => {
+      if (stopped) return;
+      try {
+        const codes = await detector.detect(video);
+        if (codes.length > 0) {
+          const value: string = codes[0].rawValue;
+          stopScan();
+          setQrCode(value.toUpperCase());
+          doLookup(value.toUpperCase());
+          return;
+        }
+      } catch {}
+      rafRef.current = requestAnimationFrame(loop);
+    };
+    rafRef.current = requestAnimationFrame(loop);
+    return () => { stopped = true; };
+  }, [scanning]);
 
   async function doLookup(code: string, mode: "qr" | "phone" = "qr") {
     setError("");
@@ -146,7 +163,7 @@ export default function EmployeePage() {
 
   return (
     <div className="min-h-screen">
-      <Navbar role="EMPLOYEE" />
+      <Navbar userName={me?.name} role={me?.role ?? "EMPLOYEE"} loading={!me} />
       <main className="mx-auto max-w-3xl px-4 py-10">
         <div className="mb-8">
           <p className="text-sm uppercase tracking-wider text-abico-gold">Ажилтан</p>
