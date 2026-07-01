@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Copy, History, Share2, Store, X } from "lucide-react";
+import { ArrowDownRight, ArrowUpRight, Check, Copy, History, MapPin, Phone, Share2, Sparkles, Store, X } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
 import { formatMnt, formatPoints, MembershipTier } from "@/lib/loyalty";
 import QRCode from "react-qr-code";
@@ -63,7 +63,7 @@ export default function DashboardPage() {
       {/* ── Fullscreen QR overlay ── */}
       {qrFullscreen && (
         <div
-          className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black/95"
+          className="fixed inset-0 z-50 flex animate-fade-up flex-col items-center justify-center bg-abico-navy/95 backdrop-blur-sm [animation-duration:0.25s]"
           onClick={() => setQrFullscreen(false)}
         >
           <p className="mb-6 text-sm text-white/60">Дэлгүүрт энэ QR кодоо үзүүлнэ</p>
@@ -71,20 +71,20 @@ export default function DashboardPage() {
             <QRCode value={user.qrCode} size={260} />
           </div>
           <p className="mt-4 font-mono text-sm text-white/50">{user.qrCode}</p>
-          <button className="mt-8 flex items-center gap-2 rounded-full bg-gray-100 px-5 py-2.5 text-sm text-white hover:bg-white/20">
+          <button
+            type="button"
+            className="mt-8 flex items-center gap-2 rounded-full bg-white/10 px-5 py-2.5 text-sm text-white transition-colors hover:bg-white/20"
+          >
             <X className="h-4 w-4" /> Хаах
           </button>
         </div>
       )}
 
       <main className="mx-auto max-w-6xl px-4 py-8">
-
-
-
         <div className="grid gap-6 lg:grid-cols-[1fr_1.1fr]">
           {/* ── Left: Membership Card ── */}
-          <div>
-            <div className="relative overflow-hidden rounded-3xl p-6 sm:p-8"
+          <div className="animate-fade-up">
+            <div className="relative overflow-hidden rounded-3xl p-6 shadow-elevated ring-1 ring-white/10 sm:p-8"
               style={{ background: "linear-gradient(135deg, #001C3B 0%, #023876 60%, #001C3B 100%)" }}>
 
               <div className="pointer-events-none absolute -right-16 -top-16 h-64 w-64 rounded-full"
@@ -101,9 +101,9 @@ export default function DashboardPage() {
                     <p className="text-xs text-white/50">LOYALTY CARD</p>
                   </div>
                 </div>
-                <span className="rounded-full border px-3 py-1 text-xs font-bold tracking-wide"
+                <span className="flex items-center gap-1 rounded-full border px-3 py-1 text-xs font-bold tracking-wide"
                   style={{ borderColor: tier.color, color: tier.color, backgroundColor: tier.color + "22" }}>
-                  ★ {tier.nameMn}
+                  <Sparkles className="h-3 w-3" /> {tier.nameMn}
                 </span>
               </div>
 
@@ -153,18 +153,20 @@ export default function DashboardPage() {
 
             {/* Referral card — visible on desktop below membership card */}
             <div className="mt-4 hidden rounded-2xl border p-5 lg:block"
-              style={{ borderColor: tier.color + "44", background: tier.color + "11" }}>
+              style={{ borderColor: tier.color + "44", background: tier.color + "0d" }}>
               <div className="mb-3 flex items-center gap-2">
-                <span className="rounded-full px-2 py-0.5 text-xs font-bold"
-                  style={{ backgroundColor: tier.color + "33", color: tier.color }}>★ {tier.nameMn}</span>
-                <p className="font-semibold">гишүүний давуу эрх</p>
+                <span className="flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-bold"
+                  style={{ backgroundColor: tier.color + "22", color: tier.color }}>
+                  <Sparkles className="h-3 w-3" /> {tier.nameMn}
+                </span>
+                <p className="font-semibold text-gray-900">гишүүний давуу эрх</p>
               </div>
-              <p className="text-3xl font-extrabold" style={{ color: tier.color }}>{tier.discountPercent}%</p>
-              <p className="text-sm text-gray-500">{tier.perks}</p>
+              <p className="text-3xl font-extrabold tracking-tight" style={{ color: tier.color }}>{tier.discountPercent}%</p>
+              <p className="text-sm text-gray-600">{tier.perks}</p>
               {nextTier && (
-                <p className="mt-3 rounded-xl bg-gray-50 px-3 py-2 text-xs text-gray-400">
+                <p className="mt-3 rounded-xl bg-white/70 px-3 py-2 text-xs text-gray-500">
                   {formatPoints(pointsToNext)} оноо нэмбэл{" "}
-                  <span style={{ color: nextTier.color }}>{nextTier.nameMn}</span>{" "}
+                  <span className="font-semibold" style={{ color: nextTier.color }}>{nextTier.nameMn}</span>{" "}
                   ({nextTier.discountPercent}% урамшуулал) болно
                 </p>
               )}
@@ -172,7 +174,7 @@ export default function DashboardPage() {
           </div>
 
           {/* ── Right: Tabs ── */}
-          <div>
+          <div className="animate-fade-up [animation-delay:80ms]">
             <div className="flex rounded-2xl border border-gray-200 bg-gray-50 p-1">
               <TabBtn active={tab === "history"} onClick={() => setTab("history")}>
                 <History className="h-4 w-4" /> Түүх
@@ -189,57 +191,73 @@ export default function DashboardPage() {
             {tab === "history" && (
               <div className="mt-4 space-y-2">
                 {data.transactions.length === 0 ? (
-                  <div className="rounded-2xl border border-gray-200 bg-gray-50 px-6 py-10 text-center">
-                    <p className="text-sm text-gray-400">Одоогоор гүйлгээ байхгүй байна.</p>
-                    <p className="mt-1 text-xs text-gray-300">Дэлгүүрт QR кодоо үзүүлж оноо цуглуулна уу.</p>
+                  <div className="card-premium px-6 py-12 text-center">
+                    <History className="mx-auto h-8 w-8 text-gray-300" />
+                    <p className="mt-3 text-sm font-medium text-gray-500">Одоогоор гүйлгээ байхгүй байна</p>
+                    <p className="mt-1 text-xs text-gray-400">Дэлгүүрт QR кодоо үзүүлж оноо цуглуулна уу</p>
                   </div>
-                ) : data.transactions.map((tx) => (
-                  <div key={tx.id} className="flex items-center justify-between rounded-2xl border border-gray-200 bg-gray-50 px-4 py-3">
-                    <div>
-                      <p className="text-sm font-medium">{tx.description ?? tx.store?.name ?? "Гүйлгээ"}</p>
-                      <p className="mt-0.5 text-xs text-gray-400">
-                        {new Date(tx.createdAt).toLocaleString("mn-MN")}
-                        {tx.purchaseAmount ? ` · ${formatMnt(tx.purchaseAmount)}` : ""}
-                      </p>
+                ) : data.transactions.map((tx) => {
+                  const isRedeem = tx.type === "REDEEM";
+                  return (
+                    <div key={tx.id} className="card-premium-hover flex items-center justify-between px-4 py-3">
+                      <div className="flex items-center gap-3">
+                        <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full ${isRedeem ? "bg-rose-50 text-rose-600" : "bg-emerald-50 text-emerald-600"}`}>
+                          {isRedeem ? <ArrowDownRight className="h-4 w-4" /> : <ArrowUpRight className="h-4 w-4" />}
+                        </span>
+                        <div>
+                          <p className="text-sm font-medium text-gray-900">{tx.description ?? tx.store?.name ?? "Гүйлгээ"}</p>
+                          <p className="mt-0.5 text-xs text-gray-400">
+                            {new Date(tx.createdAt).toLocaleString("mn-MN")}
+                            {tx.purchaseAmount ? ` · ${formatMnt(tx.purchaseAmount)}` : ""}
+                          </p>
+                        </div>
+                      </div>
+                      <span className={`shrink-0 text-sm font-bold ${isRedeem ? "text-rose-600" : "text-emerald-600"}`}>
+                        {isRedeem ? "-" : "+"}{formatPoints(tx.points)}
+                      </span>
                     </div>
-                    <span className={`text-sm font-bold ${tx.type === "REDEEM" ? "text-red-300" : "text-emerald-300"}`}>
-                      {tx.type === "REDEEM" ? "-" : "+"}{formatPoints(tx.points)}
-                    </span>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             )}
 
             {/* ── Referral ── */}
             {tab === "referral" && (
               <div className="mt-4 space-y-4">
-                <div className="rounded-2xl border border-gray-200 bg-gray-50 p-5">
-                  <p className="font-semibold">Урилгын код</p>
+                <div className="card-premium p-5">
+                  <p className="font-semibold text-gray-900">Урилгын код</p>
                   <p className="mt-1 text-sm text-gray-500">
-                    Найзаа урьж тус бүр <span className="font-bold text-abico-gold">+50 оноо</span> авна
+                    Найзаа урьж тус бүр <span className="font-bold text-abico-blue">+50 оноо</span> авна
                   </p>
-                  <div className="mt-4 flex items-center justify-between rounded-xl bg-gray-100 px-4 py-3">
-                    <code className="font-mono text-xl tracking-widest">{user.referralCode}</code>
-                    <button type="button" onClick={() => copy(user.referralCode)} className="text-abico-light hover:text-white">
-                      <Copy className="h-5 w-5" />
+                  <div className="mt-4 flex items-center justify-between rounded-xl bg-gray-50 px-4 py-3">
+                    <code className="font-mono text-xl tracking-widest text-gray-900">{user.referralCode}</code>
+                    <button
+                      type="button"
+                      onClick={() => copy(user.referralCode)}
+                      className="rounded-lg p-1.5 text-abico-blue transition-colors hover:bg-abico-blue/10 hover:text-abico-dark"
+                      title="Хуулах"
+                    >
+                      {copied ? <Check className="h-5 w-5" /> : <Copy className="h-5 w-5" />}
                     </button>
                   </div>
-                  {copied && <p className="mt-2 text-center text-xs text-emerald-300">✓ Хуулагдлаа</p>}
+                  {copied && <p className="mt-2 text-center text-xs font-medium text-emerald-600">✓ Хуулагдлаа</p>}
                 </div>
 
                 <div className="rounded-2xl border p-5 lg:hidden"
-                  style={{ borderColor: tier.color + "44", background: tier.color + "11" }}>
+                  style={{ borderColor: tier.color + "44", background: tier.color + "0d" }}>
                   <div className="mb-3 flex items-center gap-2">
-                    <span className="rounded-full px-2 py-0.5 text-xs font-bold"
-                      style={{ backgroundColor: tier.color + "33", color: tier.color }}>★ {tier.nameMn}</span>
-                    <p className="font-semibold">гишүүний давуу эрх</p>
+                    <span className="flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-bold"
+                      style={{ backgroundColor: tier.color + "22", color: tier.color }}>
+                      <Sparkles className="h-3 w-3" /> {tier.nameMn}
+                    </span>
+                    <p className="font-semibold text-gray-900">гишүүний давуу эрх</p>
                   </div>
-                  <p className="text-3xl font-extrabold" style={{ color: tier.color }}>{tier.discountPercent}%</p>
-                  <p className="text-sm text-gray-500">{tier.perks}</p>
+                  <p className="text-3xl font-extrabold tracking-tight" style={{ color: tier.color }}>{tier.discountPercent}%</p>
+                  <p className="text-sm text-gray-600">{tier.perks}</p>
                   {nextTier && (
-                    <p className="mt-3 rounded-xl bg-gray-50 px-3 py-2 text-xs text-gray-400">
+                    <p className="mt-3 rounded-xl bg-white/70 px-3 py-2 text-xs text-gray-500">
                       {formatPoints(pointsToNext)} оноо нэмбэл{" "}
-                      <span style={{ color: nextTier.color }}>{nextTier.nameMn}</span>{" "}
+                      <span className="font-semibold" style={{ color: nextTier.color }}>{nextTier.nameMn}</span>{" "}
                       ({nextTier.discountPercent}% урамшуулал) болно
                     </p>
                   )}
@@ -251,16 +269,27 @@ export default function DashboardPage() {
             {tab === "stores" && (
               <div className="mt-4 space-y-3">
                 {data.stores.length === 0 ? (
-                  <p className="py-8 text-center text-sm text-gray-400">Дэлгүүр бүртгэлгүй байна</p>
+                  <div className="card-premium px-6 py-12 text-center">
+                    <Store className="mx-auto h-8 w-8 text-gray-300" />
+                    <p className="mt-3 text-sm text-gray-500">Дэлгүүр бүртгэлгүй байна</p>
+                  </div>
                 ) : data.stores.map((s) => (
-                  <div key={s.id} className="rounded-2xl border border-gray-200 bg-gray-50 px-4 py-4">
-                    <div className="flex items-start justify-between">
-                      <div>
-                        <p className="font-semibold">{s.name}</p>
-                        {s.address && <p className="mt-1 text-sm text-gray-500">📍 {s.address}</p>}
-                        {s.phone && <p className="mt-0.5 text-sm text-gray-500">📞 {s.phone}</p>}
+                  <div key={s.id} className="card-premium-hover px-4 py-4">
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="min-w-0">
+                        <p className="font-semibold text-gray-900">{s.name}</p>
+                        {s.address && (
+                          <p className="mt-1 flex items-center gap-1.5 text-sm text-gray-500">
+                            <MapPin className="h-3.5 w-3.5 shrink-0 text-gray-400" /> {s.address}
+                          </p>
+                        )}
+                        {s.phone && (
+                          <p className="mt-0.5 flex items-center gap-1.5 text-sm text-gray-500">
+                            <Phone className="h-3.5 w-3.5 shrink-0 text-gray-400" /> {s.phone}
+                          </p>
+                        )}
                       </div>
-                      <span className="rounded-full bg-emerald-400/10 px-2 py-0.5 text-xs text-emerald-300">Нээлттэй</span>
+                      <span className="shrink-0 rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-medium text-emerald-700">Нээлттэй</span>
                     </div>
                   </div>
                 ))}
@@ -278,8 +307,8 @@ function TabBtn({ active, onClick, children }: {
 }) {
   return (
     <button type="button" onClick={onClick}
-      className={`flex flex-1 items-center justify-center gap-1.5 rounded-xl py-2.5 text-sm font-medium transition ${
-        active ? "bg-gray-100 text-white" : "text-gray-400 hover:text-gray-700"
+      className={`flex flex-1 items-center justify-center gap-1.5 rounded-xl py-2.5 text-sm font-medium transition-all duration-200 ${
+        active ? "bg-white text-gray-900 shadow-soft" : "text-gray-400 hover:text-gray-700"
       }`}>
       {children}
     </button>
