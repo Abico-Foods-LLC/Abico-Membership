@@ -5,14 +5,21 @@ import { apiError, apiSuccess } from "@/lib/utils";
 
 export async function GET(request: Request) {
   try {
-    await requireRole(["STORE_ADMIN", "PLATFORM_ADMIN"]);
+    const session = await requireRole(["STORE_ADMIN", "PLATFORM_ADMIN"]);
     const { searchParams } = new URL(request.url);
     const search = searchParams.get("search") ?? "";
+
+    // Гишүүд ямар нэг дэлгүүрт "харьяалагддаггүй" (нэг карт олон дэлгүүрт систем) тул
+    // STORE_ADMIN-д зөвхөн тухайн дэлгүүрт худалдан авалт хийж байсан гишүүдийг харуулна.
+    const admin = session.role === "STORE_ADMIN"
+      ? await db.user.findUnique({ where: { id: session.userId } })
+      : null;
 
     const members = await db.user.findMany({
       where: {
         role: "MEMBER",
         isActive: true,
+        ...(admin ? { transactions: { some: { storeId: admin.storeId ?? "" } } } : {}),
         ...(search
           ? {
               OR: [

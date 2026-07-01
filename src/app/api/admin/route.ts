@@ -14,13 +14,20 @@ export async function GET() {
     const storeFilter =
       session.role === "PLATFORM_ADMIN" ? {} : { storeId: admin?.storeId ?? "" };
 
-    const [stores, members, transactions, employees] = await Promise.all([
+    const [stores, totalMembers, transactions, employees] = await Promise.all([
       session.role === "PLATFORM_ADMIN"
         ? db.store.findMany({ orderBy: { name: "asc" } })
         : admin?.store
           ? [admin.store]
           : [],
-      db.user.count({ where: { role: "MEMBER", ...storeFilter } }),
+      // Гишүүд ямар нэг дэлгүүрт "харьяалагддаггүй" (нэг карт олон дэлгүүрт систем) тул
+      // STORE_ADMIN-ий хувьд тухайн дэлгүүрт худалдан авалт хийж байсан гишүүдийг тоолно.
+      db.user.count({
+        where: {
+          role: "MEMBER",
+          ...(storeFilter.storeId ? { transactions: { some: { storeId: storeFilter.storeId } } } : {}),
+        },
+      }),
       db.pointTransaction.findMany({
         where: storeFilter.storeId ? { storeId: storeFilter.storeId } : {},
         include: {
@@ -55,11 +62,6 @@ export async function GET() {
         );
       })
       .reduce((sum, tx) => sum + tx.points, 0);
-
-    const totalMembers =
-      session.role === "PLATFORM_ADMIN"
-        ? await db.user.count({ where: { role: "MEMBER" } })
-        : members;
 
     return apiSuccess({
       me: { name: session.name, role: session.role },
