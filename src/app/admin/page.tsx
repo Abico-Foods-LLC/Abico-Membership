@@ -59,6 +59,7 @@ export default function AdminPage() {
       .catch(() => setError("Тайлан ачаалахад алдаа гарлаа"));
   }, []);
 
+  // eslint-disable-next-line react-hooks/set-state-in-effect -- fetchData clears error state before fetching, that's intentional
   useEffect(() => { fetchData(); }, [fetchData]);
 
   return (
@@ -537,6 +538,7 @@ function MembersSection() {
     [],
   );
 
+  // eslint-disable-next-line react-hooks/set-state-in-effect -- fetchMembers sets loading state before fetching, that's intentional
   useEffect(() => { fetchMembers(""); }, [fetchMembers]);
 
   useEffect(() => {

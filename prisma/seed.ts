@@ -43,7 +43,7 @@ async function main() {
     }),
   ]);
 
-  const platformAdmin = await db.user.upsert({
+  await db.user.upsert({
     where: { phone: "99000001" },
     update: {},
     create: {
@@ -56,7 +56,7 @@ async function main() {
     },
   });
 
-  const storeAdmin = await db.user.upsert({
+  await db.user.upsert({
     where: { phone: "99000002" },
     update: {},
     create: {
