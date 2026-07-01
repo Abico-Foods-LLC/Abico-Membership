@@ -14,6 +14,12 @@ export async function POST(request: Request) {
     // Аюулгүй байдлын үүднээс хэрэглэгч олдсон эсэхийг задруулахгүй
     if (!user) return apiSuccess({ ok: true });
 
+    // Spam/email-bombing-ээс сэргийлж, сүүлийн 60 секундэд токен үүсгэсэн бол дахин илгээхгүй
+    const recent = await db.passwordResetToken.findFirst({
+      where: { userId: user.id, createdAt: { gte: new Date(Date.now() - 60 * 1000) } },
+    });
+    if (recent) return apiSuccess({ ok: true });
+
     // Хуучин токенуудыг устга
     await db.passwordResetToken.deleteMany({ where: { userId: user.id } });
 
