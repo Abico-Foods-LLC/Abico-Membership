@@ -5,6 +5,7 @@ import { CheckCircle2, KeyRound, Phone, User } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
 import { Card } from "@/components/Card";
 import { Button } from "@/components/Button";
+import { Skeleton } from "@/components/Skeleton";
 
 type Me = { name: string; phone: string; email: string | null; role: string };
 
@@ -80,8 +81,15 @@ export default function ProfilePage() {
   }
 
   if (!me) return (
-    <div className="min-h-screen"><Navbar loading />
-      <p className="mx-auto mt-20 text-center text-gray-500">Ачааллаж байна...</p>
+    <div className="min-h-screen bg-gray-50">
+      <Navbar loading />
+      <main className="mx-auto max-w-5xl px-4 py-10">
+        <Skeleton className="mb-6 h-10 w-48" />
+        <div className="grid gap-6 lg:grid-cols-2">
+          <Skeleton className="h-80 rounded-2xl" />
+          <Skeleton className="h-80 rounded-2xl" />
+        </div>
+      </main>
     </div>
   );
 

@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { ArrowDownRight, ArrowUpRight, Check, Copy, History, MapPin, Phone, Share2, Sparkles, Store, X } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
+import { Skeleton } from "@/components/Skeleton";
 import { formatMnt, formatPoints, MembershipTier } from "@/lib/loyalty";
 import QRCode from "react-qr-code";
 
@@ -48,8 +49,34 @@ export default function DashboardPage() {
     setTimeout(() => setCopied(false), 2000);
   }
 
-  if (error) return <div className="min-h-screen"><Navbar /><p className="mx-auto mt-20 max-w-sm text-center text-red-300">{error}</p></div>;
-  if (!data) return <div className="min-h-screen"><Navbar loading /><p className="mx-auto mt-20 max-w-sm text-center text-gray-500">Ачааллаж байна...</p></div>;
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <Navbar />
+        <p className="mx-auto mt-20 max-w-sm rounded-xl bg-rose-50 px-4 py-3 text-center text-sm font-medium text-rose-600">{error}</p>
+      </div>
+    );
+  }
+  if (!data) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <Navbar loading />
+        <main className="mx-auto max-w-6xl px-4 py-8">
+          <div className="grid gap-6 lg:grid-cols-[1fr_1.1fr]">
+            <Skeleton className="h-[360px] rounded-3xl sm:h-[400px]" />
+            <div>
+              <Skeleton className="h-12 rounded-2xl" />
+              <div className="mt-4 space-y-2">
+                <Skeleton className="h-16 rounded-2xl" />
+                <Skeleton className="h-16 rounded-2xl" />
+                <Skeleton className="h-16 rounded-2xl" />
+              </div>
+            </div>
+          </div>
+        </main>
+      </div>
+    );
+  }
 
   const { user, points, tier, nextTier, pointsToNext } = data;
   const progressPct = nextTier

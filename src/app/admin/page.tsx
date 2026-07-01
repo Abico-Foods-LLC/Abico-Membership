@@ -5,6 +5,7 @@ import { BarChart3, Plus, Store, Users, Wallet, X } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
 import { Card } from "@/components/Card";
 import { Button } from "@/components/Button";
+import { Skeleton } from "@/components/Skeleton";
 import { formatPoints } from "@/lib/loyalty";
 
 type StoreItem = { id: string; name: string; slug: string; address: string | null };
@@ -79,7 +80,14 @@ export default function AdminPage() {
         {error && (
           <p className="mb-4 rounded-xl bg-rose-50 px-4 py-3 text-sm font-medium text-rose-600">{error}</p>
         )}
-        {!data && !error && <p className="text-gray-500">Ачааллаж байна...</p>}
+        {!data && !error && (
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            <Skeleton className="h-28 rounded-2xl" />
+            <Skeleton className="h-28 rounded-2xl" />
+            <Skeleton className="h-28 rounded-2xl" />
+            <Skeleton className="h-28 rounded-2xl" />
+          </div>
+        )}
 
         {data && (
           <>
