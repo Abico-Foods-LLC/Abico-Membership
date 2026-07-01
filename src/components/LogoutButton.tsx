@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/Button";
 
-export function LogoutButton() {
+export function LogoutButton({ className }: { className?: string }) {
   const router = useRouter();
 
   async function logout() {
@@ -13,7 +13,7 @@ export function LogoutButton() {
   }
 
   return (
-    <Button variant="ghost" onClick={logout}>
+    <Button variant="ghost" onClick={logout} className={className}>
       Гарах
     </Button>
   );
