@@ -8,7 +8,20 @@ import { Button } from "@/components/Button";
 import { formatPoints } from "@/lib/loyalty";
 
 type StoreItem = { id: string; name: string; slug: string; address: string | null };
-type EmployeeItem = { id: string; name: string; role: string; store: { name: string } | null };
+type EmployeeItem = {
+  id: string;
+  name: string;
+  phone: string;
+  role: string;
+  store: { name: string } | null;
+  stats: {
+    pointsEarned: number;
+    earnCount: number;
+    pointsRedeemed: number;
+    redeemCount: number;
+    lastActivity: string | null;
+  };
+};
 type AdminData = {
   me: { name: string; role: string };
   stats: {
@@ -292,7 +305,32 @@ function EmployeesSection({
         {employees.map((emp) => (
           <div key={emp.id} className="card-premium-hover px-4 py-3">
             <p className="font-medium text-gray-900">{emp.name}</p>
-            <p className="text-sm text-gray-500">{emp.store?.name ?? "—"} · {emp.role === "EMPLOYEE" ? "Кассчин" : "Дэлгүүр Админ"}</p>
+            <p className="text-sm text-gray-500">
+              {emp.store?.name ?? "—"} · {emp.role === "EMPLOYEE" ? "Кассчин" : "Дэлгүүр Админ"}
+            </p>
+            <p className="mt-0.5 font-mono text-xs text-gray-400">{emp.phone}</p>
+
+            <div className="mt-3 grid grid-cols-2 gap-2 border-t border-gray-100 pt-3">
+              <div>
+                <p className="text-xs text-gray-400">Оноо нэмсэн</p>
+                <p className="text-sm font-bold text-emerald-600">
+                  +{formatPoints(emp.stats.pointsEarned)}{" "}
+                  <span className="font-normal text-gray-400">({emp.stats.earnCount})</span>
+                </p>
+              </div>
+              <div>
+                <p className="text-xs text-gray-400">Оноо хассан</p>
+                <p className="text-sm font-bold text-rose-600">
+                  -{formatPoints(emp.stats.pointsRedeemed)}{" "}
+                  <span className="font-normal text-gray-400">({emp.stats.redeemCount})</span>
+                </p>
+              </div>
+            </div>
+            {emp.stats.lastActivity && (
+              <p className="mt-2 text-xs text-gray-400">
+                Сүүлд идэвхтэй: {new Date(emp.stats.lastActivity).toLocaleString("mn-MN")}
+              </p>
+            )}
           </div>
         ))}
       </div>

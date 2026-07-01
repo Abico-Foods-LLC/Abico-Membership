@@ -42,9 +42,60 @@ export async function GET() {
           role: { in: ["EMPLOYEE", "STORE_ADMIN"] },
           ...(storeFilter.storeId ? { storeId: storeFilter.storeId } : {}),
         },
-        include: { store: { select: { name: true } } },
+        select: {
+          id: true,
+          name: true,
+          phone: true,
+          role: true,
+          store: { select: { name: true } },
+        },
       }),
     ]);
+
+    // Ажилтан тус бүрийн хэдэн оноо нэмсэн/хассан, сүүлд хэзээ ажилласан талаарх статистик
+    const employeeStatRows = await db.pointTransaction.groupBy({
+      by: ["employeeId", "type"],
+      where: {
+        employeeId: { in: employees.map((e) => e.id) },
+        ...(storeFilter.storeId ? { storeId: storeFilter.storeId } : {}),
+      },
+      _sum: { points: true },
+      _count: { _all: true },
+      _max: { createdAt: true },
+    });
+
+    type EmployeeStat = {
+      pointsEarned: number;
+      earnCount: number;
+      pointsRedeemed: number;
+      redeemCount: number;
+      lastActivity: Date | null;
+    };
+    const employeeStatMap = new Map<string, EmployeeStat>();
+    for (const row of employeeStatRows) {
+      if (!row.employeeId) continue;
+      const cur = employeeStatMap.get(row.employeeId) ?? {
+        pointsEarned: 0, earnCount: 0, pointsRedeemed: 0, redeemCount: 0, lastActivity: null,
+      };
+      if (row.type === "EARN") {
+        cur.pointsEarned += row._sum.points ?? 0;
+        cur.earnCount += row._count._all;
+      } else if (row.type === "REDEEM") {
+        cur.pointsRedeemed += row._sum.points ?? 0;
+        cur.redeemCount += row._count._all;
+      }
+      if (row._max.createdAt && (!cur.lastActivity || row._max.createdAt > cur.lastActivity)) {
+        cur.lastActivity = row._max.createdAt;
+      }
+      employeeStatMap.set(row.employeeId, cur);
+    }
+
+    const employeesWithStats = employees.map((emp) => ({
+      ...emp,
+      stats: employeeStatMap.get(emp.id) ?? {
+        pointsEarned: 0, earnCount: 0, pointsRedeemed: 0, redeemCount: 0, lastActivity: null,
+      },
+    }));
 
     const activePoints = transactions.reduce((sum, tx) => {
       if (tx.type === "REDEEM") return sum - tx.points;
@@ -73,7 +124,7 @@ export async function GET() {
         employeeCount: employees.length,
       },
       stores,
-      employees,
+      employees: employeesWithStats,
       recentTransactions: transactions.slice(0, 15),
     });
   } catch (error) {
