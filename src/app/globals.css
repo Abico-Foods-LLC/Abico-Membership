@@ -19,17 +19,45 @@ select option {
   color: #1e293b;
 }
 
+@layer base {
+  a,
+  button,
+  input,
+  textarea,
+  select {
+    @apply outline-none;
+  }
+  a:focus-visible,
+  button:focus-visible,
+  input:focus-visible,
+  textarea:focus-visible,
+  select:focus-visible {
+    @apply rounded-lg ring-2 ring-abico-blue ring-offset-2 ring-offset-white;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
 @layer components {
   .btn-primary {
-    @apply inline-flex items-center justify-center rounded-xl bg-abico-blue px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-abico-dark;
+    @apply inline-flex items-center justify-center rounded-xl bg-abico-blue px-4 py-2.5 text-sm font-semibold text-white shadow-glow transition-all duration-300 ease-premium hover:-translate-y-0.5 hover:bg-abico-dark hover:shadow-lg active:translate-y-0;
   }
 
   .btn-ghost {
-    @apply rounded-xl px-3 py-2 text-sm text-gray-600 transition hover:bg-gray-100 hover:text-gray-900;
+    @apply rounded-xl px-3 py-2 text-sm text-gray-600 transition-colors duration-200 hover:bg-gray-100 hover:text-gray-900;
   }
 
   .nav-link {
-    @apply rounded-xl px-2 py-2 text-sm text-gray-600 transition hover:bg-gray-100 hover:text-gray-900 sm:px-3;
+    @apply rounded-xl px-2 py-2 text-sm text-gray-600 transition-colors duration-200 hover:bg-gray-100 hover:text-gray-900 sm:px-3;
   }
 
   .stat-value {
@@ -38,5 +66,14 @@ select option {
 
   .stat-label {
     @apply text-xs font-semibold uppercase tracking-wider text-gray-500;
+  }
+
+  /* premium surface — the base card treatment used across the redesign */
+  .card-premium {
+    @apply rounded-2xl border border-gray-200/70 bg-white shadow-soft transition-shadow duration-300 ease-premium;
+  }
+
+  .card-premium-hover {
+    @apply card-premium hover:-translate-y-0.5 hover:shadow-elevated;
   }
 }
