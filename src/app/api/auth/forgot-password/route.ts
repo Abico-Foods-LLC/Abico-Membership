@@ -2,11 +2,17 @@ import { z } from "zod";
 import { db } from "@/lib/db";
 import { sendPasswordResetEmail } from "@/lib/email";
 import { apiError, apiSuccess } from "@/lib/utils";
+import { getClientIp, isRateLimited } from "@/lib/rateLimit";
 
 const schema = z.object({ email: z.string().email() });
 
 export async function POST(request: Request) {
   try {
+    // Имэйл enumeration/spam-аас сэргийлж IP тутамд хязгаарлана (доорх per-user cooldown-той хамт)
+    if (isRateLimited(`forgot-password:${getClientIp(request)}`, 10, 10 * 60 * 1000)) {
+      return apiError("Хэт олон оролдлого. Түр хүлээгээд дахин оролдоно уу.", 429);
+    }
+
     const { email } = schema.parse(await request.json());
 
     const user = await db.user.findFirst({ where: { email } });

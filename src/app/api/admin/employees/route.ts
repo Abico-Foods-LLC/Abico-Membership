@@ -1,11 +1,11 @@
 import { z } from "zod";
 import { requireRole, hashPassword, generateQrCode, generateReferralCode } from "@/lib/auth";
 import { db } from "@/lib/db";
-import { apiError, apiSuccess } from "@/lib/utils";
+import { apiError, apiSuccess, phoneSchema } from "@/lib/utils";
 
 const schema = z.object({
   name: z.string().min(2),
-  phone: z.string().min(8),
+  phone: phoneSchema,
   password: z.string().min(6),
   role: z.enum(["EMPLOYEE", "STORE_ADMIN"]),
   storeId: z.string().optional(),

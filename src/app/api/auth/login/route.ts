@@ -2,6 +2,7 @@ import { z } from "zod";
 import { db } from "@/lib/db";
 import { createSession, verifyPassword } from "@/lib/auth";
 import { apiError, apiSuccess } from "@/lib/utils";
+import { getClientIp, isRateLimited } from "@/lib/rateLimit";
 
 const MAX_ATTEMPTS = 5;
 const LOCK_MINUTES = 15;
@@ -13,6 +14,12 @@ const loginSchema = z.object({
 
 export async function POST(request: Request) {
   try {
+    // Данс-суурьтай lockout нь зөвхөн бүртгэлтэй дугаарт хамаарах тул IP-ээр
+    // олон дугаар турших хэлбэрийн brute-force-оос энэ давхар хамгаалалт хамгаална.
+    if (isRateLimited(`login:${getClientIp(request)}`, 20, 10 * 60 * 1000)) {
+      return apiError("Хэт олон оролдлого. Түр хүлээгээд дахин оролдоно уу.", 429);
+    }
+
     const body = loginSchema.parse(await request.json());
     const user = await db.user.findUnique({ where: { phone: body.phone } });
 

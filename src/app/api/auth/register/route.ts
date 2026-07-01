@@ -7,17 +7,22 @@ import {
   hashPassword,
 } from "@/lib/auth";
 import { REFERRAL_BONUS } from "@/lib/loyalty";
-import { apiError, apiSuccess } from "@/lib/utils";
+import { apiError, apiSuccess, phoneSchema } from "@/lib/utils";
+import { getClientIp, isRateLimited } from "@/lib/rateLimit";
 
 const registerSchema = z.object({
   name: z.string().min(2, "Нэр хамгийн багадаа 2 тэмдэгт"),
-  phone: z.string().min(8, "Утасны дугаар буруу"),
+  phone: phoneSchema,
   password: z.string().min(6, "Нууц үг хамгийн багадаа 6 тэмдэгт"),
   referralCode: z.string().optional(),
 });
 
 export async function POST(request: Request) {
   try {
+    if (isRateLimited(`register:${getClientIp(request)}`, 5, 10 * 60 * 1000)) {
+      return apiError("Хэт олон оролдлого. Түр хүлээгээд дахин оролдоно уу.", 429);
+    }
+
     const body = registerSchema.parse(await request.json());
 
     const existing = await db.user.findUnique({
