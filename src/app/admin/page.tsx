@@ -48,20 +48,27 @@ export default function AdminPage() {
   useEffect(() => { fetchData(); }, [fetchData]);
 
   return (
-    <div className="min-h-screen">
+    <div className="relative min-h-screen overflow-hidden bg-gray-50">
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 -top-40 -z-10 h-[560px]"
+        style={{ background: "radial-gradient(60% 60% at 50% 0%, rgba(21,114,190,0.08) 0%, rgba(21,114,190,0) 70%)" }}
+      />
       <Navbar userName={data?.me.name} role={data?.me.role} loading={!data && !error} />
       <main className="mx-auto max-w-6xl px-4 py-10">
-        <div className="mb-8">
-          <p className="text-sm uppercase tracking-wider text-abico-gold">Удирдлага</p>
-          <h1 className="text-3xl font-bold">Хяналтын самбар</h1>
+        <div className="mb-8 animate-fade-up">
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-abico-blue">Удирдлага</p>
+          <h1 className="mt-1 text-3xl font-bold tracking-tight text-gray-900">Хяналтын самбар</h1>
         </div>
 
-        {error && <p className="text-red-300">{error}</p>}
-        {!data && !error && <p className="text-gray-600">Ачааллаж байна...</p>}
+        {error && (
+          <p className="mb-4 rounded-xl bg-rose-50 px-4 py-3 text-sm font-medium text-rose-600">{error}</p>
+        )}
+        {!data && !error && <p className="text-gray-500">Ачааллаж байна...</p>}
 
         {data && (
           <>
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="grid animate-fade-up gap-4 sm:grid-cols-2 lg:grid-cols-4">
               <StatCard icon={<Users className="h-5 w-5" />} label="Нийт гишүүд" value={formatPoints(data.stats.totalMembers)} />
               <StatCard icon={<Wallet className="h-5 w-5" />} label="Идэвхтэй оноо" value={formatPoints(data.stats.activePoints)} />
               <StatCard icon={<BarChart3 className="h-5 w-5" />} label="Сарын оноо олголт" value={formatPoints(data.stats.monthlyEarned)} />
@@ -70,18 +77,20 @@ export default function AdminPage() {
 
             <div className="mt-4 grid gap-4 lg:grid-cols-2">
               <StoresSection stores={data.stores} onRefresh={fetchData} />
-              <Card>
-                <h2 className="mb-3 text-lg font-semibold">Сүүлийн гүйлгээ</h2>
+              <Card className="animate-fade-up [animation-delay:80ms]">
+                <h2 className="mb-3 text-lg font-semibold text-gray-900">Сүүлийн гүйлгээ</h2>
                 <div className="space-y-2">
-                  {data.recentTransactions.map((tx) => (
-                    <div key={tx.id} className="flex items-center justify-between rounded-xl border border-gray-200 px-3 py-2">
+                  {data.recentTransactions.length === 0 ? (
+                    <p className="py-6 text-center text-sm text-gray-400">Гүйлгээ алга байна</p>
+                  ) : data.recentTransactions.map((tx) => (
+                    <div key={tx.id} className="card-premium-hover flex items-center justify-between px-3 py-2">
                       <div>
-                        <p className="font-medium">{tx.user.name}</p>
+                        <p className="font-medium text-gray-900">{tx.user.name}</p>
                         <p className="text-xs text-gray-500">
                           {tx.store?.name ?? "—"} · {new Date(tx.createdAt).toLocaleString("mn-MN")}
                         </p>
                       </div>
-                      <p className="font-bold text-emerald-300">+{formatPoints(tx.points)}</p>
+                      <p className="font-bold text-emerald-600">+{formatPoints(tx.points)}</p>
                     </div>
                   ))}
                 </div>
@@ -104,8 +113,8 @@ export default function AdminPage() {
 
 function StatCard({ icon, label, value }: { icon: React.ReactNode; label: string; value: string }) {
   return (
-    <Card>
-      <div className="flex items-center gap-2 text-abico-blue">{icon}</div>
+    <Card className="card-premium-hover">
+      <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-abico-blue/10 text-abico-blue">{icon}</span>
       <p className="stat-label mt-3">{label}</p>
       <p className="stat-value mt-1">{value}</p>
     </Card>
@@ -136,21 +145,27 @@ function StoresSection({ stores, onRefresh }: { stores: StoreItem[]; onRefresh: 
   }
 
   return (
-    <Card>
+    <Card className="animate-fade-up">
       <div className="mb-4 flex items-center justify-between">
-        <h2 className="text-lg font-semibold">Партнер дэлгүүрүүд</h2>
-        <button type="button" onClick={() => setOpen(!open)} className="flex items-center gap-1 text-sm text-abico-blue hover:text-abico-dark">
+        <h2 className="text-lg font-semibold text-gray-900">Партнер дэлгүүрүүд</h2>
+        <button
+          type="button"
+          onClick={() => setOpen(!open)}
+          className="flex items-center gap-1 rounded-lg px-2 py-1 text-sm font-medium text-abico-blue transition-colors hover:bg-abico-blue/10 hover:text-abico-dark"
+        >
           {open ? <X className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
           {open ? "Болих" : "Нэмэх"}
         </button>
       </div>
 
       {open && (
-        <form onSubmit={submit} className="mb-4 space-y-3 rounded-xl border border-gray-200 p-4">
+        <form onSubmit={submit} className="mb-4 animate-fade-up space-y-3 rounded-xl border border-gray-200 bg-gray-50/60 p-4 [animation-duration:0.3s]">
           <Input label="Нэр" value={form.name} onChange={(v) => setForm({ ...form, name: v })} required />
           <Input label="Хаяг" value={form.address} onChange={(v) => setForm({ ...form, address: v })} />
           <Input label="Утас" value={form.phone} onChange={(v) => setForm({ ...form, phone: v })} />
-          {err && <p className="text-sm text-red-300">{err}</p>}
+          {err && (
+            <p className="rounded-xl bg-rose-50 px-3 py-2 text-sm font-medium text-rose-600">{err}</p>
+          )}
           <Button type="submit" className="w-full" disabled={loading}>
             {loading ? "Нэмж байна..." : "Дэлгүүр нэмэх"}
           </Button>
@@ -159,8 +174,8 @@ function StoresSection({ stores, onRefresh }: { stores: StoreItem[]; onRefresh: 
 
       <div className="space-y-3">
         {stores.map((store) => (
-          <div key={store.id} className="rounded-xl border border-gray-200 px-4 py-3">
-            <p className="font-medium">{store.name}</p>
+          <div key={store.id} className="card-premium-hover px-4 py-3">
+            <p className="font-medium text-gray-900">{store.name}</p>
             <p className="text-sm text-gray-500">{store.address ?? store.slug}</p>
           </div>
         ))}
@@ -201,17 +216,21 @@ function EmployeesSection({
   }
 
   return (
-    <Card>
+    <Card className="animate-fade-up [animation-delay:160ms]">
       <div className="mb-4 flex items-center justify-between">
-        <h2 className="text-lg font-semibold">Ажилтнууд</h2>
-        <button type="button" onClick={() => setOpen(!open)} className="flex items-center gap-1 text-sm text-abico-blue hover:text-abico-dark">
+        <h2 className="text-lg font-semibold text-gray-900">Ажилтнууд</h2>
+        <button
+          type="button"
+          onClick={() => setOpen(!open)}
+          className="flex items-center gap-1 rounded-lg px-2 py-1 text-sm font-medium text-abico-blue transition-colors hover:bg-abico-blue/10 hover:text-abico-dark"
+        >
           {open ? <X className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
           {open ? "Болих" : "Нэмэх"}
         </button>
       </div>
 
       {open && (
-        <form onSubmit={submit} className="mb-4 space-y-3 rounded-xl border border-gray-200 p-4">
+        <form onSubmit={submit} className="mb-4 animate-fade-up space-y-3 rounded-xl border border-gray-200 bg-gray-50/60 p-4 [animation-duration:0.3s]">
           <Input label="Нэр" value={form.name} onChange={(v) => setForm({ ...form, name: v })} required />
           <Input label="Утасны дугаар" value={form.phone} onChange={(v) => setForm({ ...form, phone: v })} required />
           <Input label="Нууц үг" type="password" value={form.password} onChange={(v) => setForm({ ...form, password: v })} required />
@@ -221,7 +240,7 @@ function EmployeesSection({
               required
               value={form.storeId}
               onChange={(e) => setForm({ ...form, storeId: e.target.value })}
-              className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-2.5 text-gray-900 outline-none focus:ring-2 focus:ring-abico-blue"
+              className="input-premium"
             >
               <option value="">— Сонгох —</option>
               {stores.map((s) => <option key={s.id} value={s.id}>{s.name}</option>)}
@@ -232,13 +251,15 @@ function EmployeesSection({
             <select
               value={form.role}
               onChange={(e) => setForm({ ...form, role: e.target.value })}
-              className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-2.5 text-gray-900 outline-none focus:ring-2 focus:ring-abico-blue"
+              className="input-premium"
             >
               <option value="EMPLOYEE">Ажилтан (Кассчин)</option>
               <option value="STORE_ADMIN">Дэлгүүрийн Админ</option>
             </select>
           </div>
-          {err && <p className="text-sm text-red-300">{err}</p>}
+          {err && (
+            <p className="rounded-xl bg-rose-50 px-3 py-2 text-sm font-medium text-rose-600">{err}</p>
+          )}
           <Button type="submit" className="w-full" disabled={loading}>
             {loading ? "Нэмж байна..." : "Ажилтан нэмэх"}
           </Button>
@@ -247,8 +268,8 @@ function EmployeesSection({
 
       <div className="grid gap-3 sm:grid-cols-2">
         {employees.map((emp) => (
-          <div key={emp.id} className="rounded-xl border border-gray-200 px-4 py-3">
-            <p className="font-medium">{emp.name}</p>
+          <div key={emp.id} className="card-premium-hover px-4 py-3">
+            <p className="font-medium text-gray-900">{emp.name}</p>
             <p className="text-sm text-gray-500">{emp.store?.name ?? "—"} · {emp.role === "EMPLOYEE" ? "Кассчин" : "Дэлгүүр Админ"}</p>
           </div>
         ))}
@@ -291,18 +312,20 @@ function MembersSection() {
   }, [search, fetchMembers]);
 
   return (
-    <Card>
+    <Card className="animate-fade-up [animation-delay:240ms]">
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-2">
-          <Users className="h-5 w-5 text-abico-gold" />
-          <h2 className="text-lg font-semibold">Гишүүд</h2>
+          <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-abico-blue/10 text-abico-blue">
+            <Users className="h-4.5 w-4.5" />
+          </span>
+          <h2 className="text-lg font-semibold text-gray-900">Гишүүд</h2>
           {!loading && <span className="text-sm text-gray-400">({members.length})</span>}
         </div>
         <input
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Нэр эсвэл утасны дугаараар хайх..."
-          className="w-64 rounded-xl border border-gray-200 bg-gray-50 px-4 py-2 text-sm text-gray-900 outline-none focus:ring-2 focus:ring-abico-blue"
+          className="input-premium w-64 py-2 text-sm"
         />
       </div>
 
@@ -319,20 +342,20 @@ function MembersSection() {
               <th className="pb-3">Бүртгэл</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-white/5">
+          <tbody className="divide-y divide-gray-100">
             {members.map((m) => (
-              <tr key={m.id}>
-                <td className="py-3 pr-4 font-medium">{m.name}</td>
+              <tr key={m.id} className="transition-colors hover:bg-gray-50">
+                <td className="py-3 pr-4 font-medium text-gray-900">{m.name}</td>
                 <td className="py-3 pr-4 font-mono text-gray-600">{m.phone}</td>
-                <td className="py-3 pr-4 font-bold text-abico-gold">{formatPoints(m.points)}</td>
+                <td className="py-3 pr-4 font-bold text-abico-blue">{formatPoints(m.points)}</td>
                 <td className="py-3 pr-4">
-                  <span className="rounded-full bg-gray-100 px-2 py-0.5 text-xs">{m.tier}</span>
+                  <span className="rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-700">{m.tier}</span>
                 </td>
                 <td className="py-3 text-gray-400">{new Date(m.createdAt).toLocaleDateString("mn-MN")}</td>
               </tr>
             ))}
             {!loading && members.length === 0 && (
-              <tr><td colSpan={5} className="py-6 text-center text-gray-300">Гишүүн олдсонгүй</td></tr>
+              <tr><td colSpan={5} className="py-6 text-center text-gray-400">Гишүүн олдсонгүй</td></tr>
             )}
           </tbody>
         </table>
@@ -362,7 +385,7 @@ function Input({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         required={required}
-        className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-2.5 text-gray-900 outline-none focus:ring-2 focus:ring-abico-blue"
+        className="input-premium"
       />
     </label>
   );
