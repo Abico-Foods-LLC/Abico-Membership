@@ -22,6 +22,15 @@ const config: Config = {
       boxShadow: {
         card: "0 20px 50px -20px rgba(0, 0, 0, 0.45)",
       },
+      keyframes: {
+        marquee: {
+          "0%": { transform: "translateX(0)" },
+          "100%": { transform: "translateX(-50%)" },
+        },
+      },
+      animation: {
+        marquee: "marquee 22s linear infinite",
+      },
     },
   },
   plugins: [],

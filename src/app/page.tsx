@@ -17,10 +17,20 @@ import { getSession } from "@/lib/auth";
 const BRAND_LOGOS = [
   { src: "/brands/Daiso.png", name: "Daiso" },
   { src: "/brands/Pigeon.png", name: "Pigeon" },
-  { src: "/brands/LION_logo.png", name: "Lion" },
+  { src: "/brands/Lion.png", name: "Lion" },
   { src: "/brands/KireiKirei.png", name: "KireiKirei" },
   { src: "/brands/Dydo.png", name: "Dydo" },
   { src: "/brands/Kagome.png", name: "Kagome" },
+  { src: "/brands/Elis.png", name: "Elis" },
+  { src: "/brands/Fundokin.png", name: "Fundokin" },
+  { src: "/brands/Goon.png", name: "Goon" },
+  { src: "/brands/Ideal.png", name: "Ideal" },
+  { src: "/brands/PigeonTeens.png", name: "Pigeon Teens" },
+  { src: "/brands/PokkaSapporo.png", name: "Pokka Sapporo" },
+  { src: "/brands/Sanytol.webp", name: "Sanytol" },
+  { src: "/brands/SB.png", name: "S&B" },
+  { src: "/brands/BlackThunder.jpg", name: "Black Thunder" },
+  { src: "/brands/Pip.jpg", name: "Pip" },
 ];
 
 export default async function HomePage() {
@@ -36,7 +46,7 @@ export default async function HomePage() {
         <section className="mx-auto max-w-7xl px-6 py-14 md:py-20">
           <div className="grid items-center gap-12 lg:grid-cols-2">
             {/* Left: Text */}
-            <div>
+            <div className="min-w-0">
               <p className="text-sm font-semibold uppercase tracking-[0.2em] text-abico-blue">
                 ABICO.MN
               </p>
@@ -60,16 +70,16 @@ export default async function HomePage() {
                 </Link>
               </div>
 
-              {/* Brand logos strip */}
-              <div className="mt-10">
+              {/* Brand logos strip — sideways-scrolling badge marquee */}
+              <div className="mt-10 -mx-6 overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_5%,black_95%,transparent)] px-6 md:-mx-0 md:px-0">
                 <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-gray-400">
                   Партнер брэндүүд
                 </p>
-                <div className="flex flex-wrap items-center gap-3">
-                  {BRAND_LOGOS.map((b) => (
+                <div className="flex w-max animate-marquee gap-3 hover:[animation-play-state:paused]">
+                  {[...BRAND_LOGOS, ...BRAND_LOGOS].map((b, i) => (
                     <div
-                      key={b.name}
-                      className="flex h-10 w-20 items-center justify-center rounded-xl border border-gray-200 bg-white px-2 shadow-sm"
+                      key={`${b.name}-${i}`}
+                      className="flex h-10 w-20 shrink-0 items-center justify-center rounded-xl border border-gray-200 bg-white px-2 shadow-sm"
                     >
                       <Image
                         src={b.src}
@@ -78,6 +88,7 @@ export default async function HomePage() {
                         height={32}
                         className="max-h-8 w-auto object-contain"
                         unoptimized
+                        loading="eager"
                       />
                     </div>
                   ))}
