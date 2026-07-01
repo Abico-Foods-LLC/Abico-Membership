@@ -62,6 +62,7 @@ export async function GET() {
         : members;
 
     return apiSuccess({
+      me: { name: session.name, role: session.role },
       stats: {
         totalMembers,
         activePoints,

@@ -10,6 +10,7 @@ import { formatPoints } from "@/lib/loyalty";
 type StoreItem = { id: string; name: string; slug: string; address: string | null };
 type EmployeeItem = { id: string; name: string; role: string; store: { name: string } | null };
 type AdminData = {
+  me: { name: string; role: string };
   stats: {
     totalMembers: number;
     activePoints: number;
@@ -48,7 +49,7 @@ export default function AdminPage() {
 
   return (
     <div className="min-h-screen">
-      <Navbar role="PLATFORM_ADMIN" />
+      <Navbar userName={data?.me.name} role={data?.me.role} loading={!data && !error} />
       <main className="mx-auto max-w-6xl px-4 py-10">
         <div className="mb-8">
           <p className="text-sm uppercase tracking-wider text-abico-gold">Удирдлага</p>
