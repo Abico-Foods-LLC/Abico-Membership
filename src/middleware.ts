@@ -11,7 +11,7 @@ function getSecret() {
 const protectedRoutes: Record<string, string[]> = {
   "/dashboard": ["MEMBER", "EMPLOYEE", "STORE_ADMIN", "PLATFORM_ADMIN"],
   "/profile": ["MEMBER", "EMPLOYEE", "STORE_ADMIN", "PLATFORM_ADMIN"],
-  "/employee": ["EMPLOYEE", "STORE_ADMIN", "PLATFORM_ADMIN"],
+  "/employee": ["EMPLOYEE", "STORE_ADMIN"],
   "/admin": ["STORE_ADMIN", "PLATFORM_ADMIN"],
 };
 
