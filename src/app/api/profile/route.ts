@@ -26,6 +26,9 @@ export async function PATCH(request: Request) {
     return apiSuccess({ name: updated.name, email: updated.email });
   } catch (error) {
     if (error instanceof z.ZodError) return apiError(error.issues[0]?.message ?? "Буруу өгөгдөл", 400);
+    if (error && typeof error === "object" && "code" in error && error.code === "P2002") {
+      return apiError("Энэ имэйл хаяг өөр хэрэглэгчид бүртгэлтэй байна", 409);
+    }
     return apiError("Шинэчлэх амжилтгүй", 500);
   }
 }
