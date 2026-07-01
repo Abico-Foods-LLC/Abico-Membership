@@ -8,7 +8,12 @@ export default async function RegisterPage() {
   if (session) redirect("/dashboard");
 
   return (
-    <div className="min-h-screen">
+    <div className="relative min-h-screen overflow-hidden bg-gray-50">
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 -top-40 -z-10 h-[560px]"
+        style={{ background: "radial-gradient(60% 60% at 50% 0%, rgba(21,114,190,0.08) 0%, rgba(21,114,190,0) 70%)" }}
+      />
       <Navbar />
       <main className="mx-auto max-w-6xl px-4 py-16">
         <AuthForm mode="register" />

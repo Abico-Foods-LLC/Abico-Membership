@@ -31,27 +31,33 @@ export default function ForgotPasswordPage() {
   }
 
   return (
-    <div className="min-h-screen">
+    <div className="relative min-h-screen overflow-hidden bg-gray-50">
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 -top-40 -z-10 h-[560px]"
+        style={{ background: "radial-gradient(60% 60% at 50% 0%, rgba(21,114,190,0.08) 0%, rgba(21,114,190,0) 70%)" }}
+      />
       <Navbar />
       <main className="mx-auto max-w-6xl px-4 py-16">
-        <Card className="mx-auto max-w-md">
+        <Card className="mx-auto max-w-md animate-fade-up p-8">
           {sent ? (
             <div className="text-center">
-              <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-abico-blue/20">
+              <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-abico-blue/10">
                 <span className="text-2xl">✉️</span>
               </div>
-              <h1 className="text-xl font-bold">Имэйл илгээгдлээ</h1>
+              <h1 className="text-xl font-bold text-gray-900">Имэйл илгээгдлээ</h1>
               <p className="mt-2 text-sm text-gray-600">
-                <span className="font-semibold text-white">{email}</span> хаяг руу нууц үг сэргээх линк илгээгдлээ.
+                <span className="font-semibold text-gray-900">{email}</span> хаяг руу нууц үг сэргээх линк илгээгдлээ.
                 Спам хавтсыг шалгана уу.
               </p>
-              <Link href="/login" className="mt-6 inline-block text-sm text-abico-light hover:underline">
+              <Link href="/login" className="mt-6 inline-block text-sm font-medium text-abico-blue hover:text-abico-dark hover:underline">
                 Нэвтрэх хуудас руу буцах
               </Link>
             </div>
           ) : (
             <>
-              <h1 className="text-2xl font-bold">Нууц үг мартсан?</h1>
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-abico-blue">ABICO.MN</p>
+              <h1 className="mt-2 text-2xl font-bold tracking-tight text-gray-900">Нууц үг мартсан?</h1>
               <p className="mt-2 text-sm text-gray-600">
                 Бүртгэлтэй имэйлээ оруулна уу — нууц үг сэргээх линк илгээнэ.
               </p>
@@ -64,16 +70,18 @@ export default function ForgotPasswordPage() {
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="example@mail.com"
                     required
-                    className="w-full rounded-xl border border-gray-200 bg-gray-100 px-4 py-2.5 text-white outline-none focus:ring-2 focus:ring-abico-blue"
+                    className="input-premium"
                   />
                 </label>
-                {error && <p className="text-sm text-red-300">{error}</p>}
+                {error && (
+                  <p className="rounded-xl bg-rose-50 px-3 py-2 text-sm font-medium text-rose-600">{error}</p>
+                )}
                 <Button type="submit" className="w-full" disabled={loading}>
                   {loading ? "Илгээж байна..." : "Линк илгээх"}
                 </Button>
               </form>
               <p className="mt-4 text-center text-sm text-gray-600">
-                <Link href="/login" className="text-abico-light hover:underline">
+                <Link href="/login" className="font-medium text-abico-blue hover:text-abico-dark hover:underline">
                   Нэвтрэх хуудас руу буцах
                 </Link>
               </p>

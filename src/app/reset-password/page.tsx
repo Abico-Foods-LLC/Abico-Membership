@@ -34,27 +34,28 @@ function ResetForm() {
   }
 
   if (!token) return (
-    <Card className="mx-auto max-w-md text-center">
-      <p className="text-red-300">Линк буруу байна. Дахин оролдоно уу.</p>
-      <Link href="/forgot-password" className="mt-4 inline-block text-sm text-abico-light hover:underline">
+    <Card className="mx-auto max-w-md p-8 text-center">
+      <p className="rounded-xl bg-rose-50 px-3 py-2 text-sm font-medium text-rose-600">Линк буруу байна. Дахин оролдоно уу.</p>
+      <Link href="/forgot-password" className="mt-4 inline-block text-sm font-medium text-abico-blue hover:text-abico-dark hover:underline">
         Буцах
       </Link>
     </Card>
   );
 
   return (
-    <Card className="mx-auto max-w-md">
+    <Card className="mx-auto max-w-md animate-fade-up p-8">
       {done ? (
         <div className="text-center">
-          <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-emerald-400/20">
+          <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-emerald-50">
             <span className="text-2xl">✓</span>
           </div>
-          <h1 className="text-xl font-bold text-emerald-300">Амжилттай!</h1>
+          <h1 className="text-xl font-bold text-emerald-600">Амжилттай!</h1>
           <p className="mt-2 text-sm text-gray-600">Нууц үг шинэчлэгдлээ. Нэвтрэх хуудас руу чиглүүлж байна...</p>
         </div>
       ) : (
         <>
-          <h1 className="text-2xl font-bold">Шинэ нууц үг</h1>
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-abico-blue">ABICO.MN</p>
+          <h1 className="mt-2 text-2xl font-bold tracking-tight text-gray-900">Шинэ нууц үг</h1>
           <p className="mt-2 text-sm text-gray-600">Хамгийн багадаа 6 тэмдэгт оруулна уу.</p>
           <form onSubmit={handleSubmit} className="mt-6 space-y-4">
             <label className="block">
@@ -65,7 +66,7 @@ function ResetForm() {
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 minLength={6}
-                className="w-full rounded-xl border border-gray-200 bg-gray-100 px-4 py-2.5 text-white outline-none focus:ring-2 focus:ring-abico-blue"
+                className="input-premium"
               />
             </label>
             <label className="block">
@@ -76,10 +77,12 @@ function ResetForm() {
                 onChange={(e) => setConfirm(e.target.value)}
                 required
                 minLength={6}
-                className="w-full rounded-xl border border-gray-200 bg-gray-100 px-4 py-2.5 text-white outline-none focus:ring-2 focus:ring-abico-blue"
+                className="input-premium"
               />
             </label>
-            {error && <p className="text-sm text-red-300">{error}</p>}
+            {error && (
+              <p className="rounded-xl bg-rose-50 px-3 py-2 text-sm font-medium text-rose-600">{error}</p>
+            )}
             <Button type="submit" className="w-full" disabled={loading}>
               {loading ? "Хадгалж байна..." : "Нууц үг сэргээх"}
             </Button>
@@ -92,10 +95,15 @@ function ResetForm() {
 
 export default function ResetPasswordPage() {
   return (
-    <div className="min-h-screen">
+    <div className="relative min-h-screen overflow-hidden bg-gray-50">
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 -top-40 -z-10 h-[560px]"
+        style={{ background: "radial-gradient(60% 60% at 50% 0%, rgba(21,114,190,0.08) 0%, rgba(21,114,190,0) 70%)" }}
+      />
       <Navbar />
       <main className="mx-auto max-w-6xl px-4 py-16">
-        <Suspense fallback={<Card className="mx-auto max-w-md text-center text-gray-500">Ачааллаж байна...</Card>}>
+        <Suspense fallback={<Card className="mx-auto max-w-md p-8 text-center text-gray-500">Ачааллаж байна...</Card>}>
           <ResetForm />
         </Suspense>
       </main>

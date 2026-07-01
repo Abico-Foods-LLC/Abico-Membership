@@ -54,8 +54,9 @@ export function AuthForm({ mode }: { mode: "login" | "register" }) {
   }
 
   return (
-    <Card className="mx-auto max-w-md">
-      <h1 className="text-2xl font-bold text-gray-900">
+    <Card className="mx-auto max-w-md animate-fade-up p-8">
+      <p className="text-xs font-semibold uppercase tracking-[0.2em] text-abico-blue">ABICO.MN</p>
+      <h1 className="mt-2 text-2xl font-bold tracking-tight text-gray-900">
         {mode === "login" ? "Нэвтрэх" : "Гишүүнчлэлд бүртгүүлэх"}
       </h1>
       <p className="mt-2 text-sm text-gray-600">
@@ -94,7 +95,9 @@ export function AuthForm({ mode }: { mode: "login" | "register" }) {
             onChange={(v) => setForm({ ...form, referralCode: v })}
           />
         )}
-        {error && <p className="text-sm text-red-500">{error}</p>}
+        {error && (
+          <p className="rounded-xl bg-rose-50 px-3 py-2 text-sm font-medium text-rose-600">{error}</p>
+        )}
         <Button type="submit" className="w-full" disabled={loading}>
           {loading ? "Түр хүлээнэ үү..." : mode === "login" ? "Нэвтрэх" : "Бүртгүүлэх"}
         </Button>
@@ -149,7 +152,7 @@ function Field({
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
         required={required}
-        className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-2.5 text-gray-900 outline-none placeholder:text-gray-400 focus:ring-2 focus:ring-abico-blue"
+        className="input-premium"
       />
     </label>
   );
