@@ -47,7 +47,7 @@ export async function createSession(user: Pick<User, "id" | "role" | "name">) {
     .setExpirationTime(`${SESSION_TTL}s`)
     .sign(getSecret());
 
-  cookies().set(COOKIE_NAME, token, {
+  (await cookies()).set(COOKIE_NAME, token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
@@ -57,11 +57,11 @@ export async function createSession(user: Pick<User, "id" | "role" | "name">) {
 }
 
 export async function destroySession() {
-  cookies().delete(COOKIE_NAME);
+  (await cookies()).delete(COOKIE_NAME);
 }
 
 export async function getSession(): Promise<SessionPayload | null> {
-  const token = cookies().get(COOKIE_NAME)?.value;
+  const token = (await cookies()).get(COOKIE_NAME)?.value;
   if (!token) return null;
 
   try {
