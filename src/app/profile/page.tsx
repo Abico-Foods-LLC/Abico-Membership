@@ -8,6 +8,13 @@ import { Button } from "@/components/Button";
 
 type Me = { name: string; phone: string; email: string | null; role: string };
 
+const ROLE_LABEL: Record<string, string> = {
+  MEMBER: "Гишүүн",
+  EMPLOYEE: "Ажилтан",
+  STORE_ADMIN: "Дэлгүүрийн админ",
+  PLATFORM_ADMIN: "Удирдлага",
+};
+
 export default function ProfilePage() {
   const [me, setMe] = useState<Me | null>(null);
   const [name, setName] = useState("");
@@ -83,7 +90,7 @@ export default function ProfilePage() {
       <Navbar userName={me.name} role={me.role} />
       <main className="mx-auto max-w-5xl px-4 py-10">
         <div className="mb-6 animate-fade-up">
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-abico-blue">Гишүүн</p>
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-abico-blue">{ROLE_LABEL[me.role] ?? "Гишүүн"}</p>
           <h1 className="mt-1 text-3xl font-bold tracking-tight text-gray-900">Профайл</h1>
         </div>
 
