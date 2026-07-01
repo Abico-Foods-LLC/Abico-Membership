@@ -8,18 +8,28 @@ const schema = z.object({
   phone: z.string().min(8),
   password: z.string().min(6),
   role: z.enum(["EMPLOYEE", "STORE_ADMIN"]),
-  storeId: z.string().min(1),
+  storeId: z.string().optional(),
 });
 
 export async function POST(request: Request) {
   try {
-    await requireRole(["PLATFORM_ADMIN"]);
+    const session = await requireRole(["PLATFORM_ADMIN", "STORE_ADMIN"]);
     const body = schema.parse(await request.json());
+
+    // Дэлгүүрийн админ зөвхөн өөрийн дэлгүүрт, зөвхөн кассчин (EMPLOYEE) нэмэх эрхтэй —
+    // өөр дэлгүүрт хамаарах эсвэл дэлгүүрийн админ шинээр нэмэх нь Platform Admin-д хамаарна.
+    let storeId = body.storeId;
+    if (session.role === "STORE_ADMIN") {
+      if (body.role !== "EMPLOYEE") return apiError("Зөвхөн Platform Admin шинэ Дэлгүүрийн Админ нэмэх боломжтой", 403);
+      const admin = await db.user.findUnique({ where: { id: session.userId } });
+      storeId = admin?.storeId ?? undefined;
+    }
+    if (!storeId) return apiError("Дэлгүүр сонгоогүй байна", 400);
 
     const existing = await db.user.findUnique({ where: { phone: body.phone } });
     if (existing) return apiError("Энэ утасны дугаар бүртгэлтэй байна", 409);
 
-    const store = await db.store.findUnique({ where: { id: body.storeId } });
+    const store = await db.store.findUnique({ where: { id: storeId } });
     if (!store) return apiError("Дэлгүүр олдсонгүй", 404);
 
     const user = await db.user.create({
@@ -30,7 +40,7 @@ export async function POST(request: Request) {
         qrCode: generateQrCode(),
         referralCode: generateReferralCode(),
         role: body.role,
-        storeId: body.storeId,
+        storeId,
       },
     });
 

@@ -77,7 +77,7 @@ export default function AdminPage() {
             </div>
 
             <div className="mt-4 grid gap-4 lg:grid-cols-2">
-              <StoresSection stores={data.stores} onRefresh={fetchData} />
+              <StoresSection stores={data.stores} onRefresh={fetchData} canCreate={data.me.role === "PLATFORM_ADMIN"} />
               <Card className="animate-fade-up [animation-delay:80ms]">
                 <h2 className="mb-3 text-lg font-semibold text-gray-900">Сүүлийн гүйлгээ</h2>
                 <div className="space-y-2">
@@ -107,11 +107,11 @@ export default function AdminPage() {
             </div>
 
             <div className="mt-4">
-              <EmployeesSection stores={data.stores} employees={data.employees} onRefresh={fetchData} />
+              <EmployeesSection stores={data.stores} employees={data.employees} onRefresh={fetchData} meRole={data.me.role} />
             </div>
 
             <div className="mt-4">
-              <PromotionsSection stores={data.stores} canDeactivate={data.me.role === "PLATFORM_ADMIN"} />
+              <PromotionsSection stores={data.stores} canDeactivate={data.me.role === "PLATFORM_ADMIN"} isStoreAdmin={data.me.role === "STORE_ADMIN"} />
             </div>
 
             <div className="mt-4">
@@ -134,7 +134,7 @@ function StatCard({ icon, label, value }: { icon: React.ReactNode; label: string
   );
 }
 
-function StoresSection({ stores, onRefresh }: { stores: StoreItem[]; onRefresh: () => void }) {
+function StoresSection({ stores, onRefresh, canCreate }: { stores: StoreItem[]; onRefresh: () => void; canCreate: boolean }) {
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState({ name: "", address: "", phone: "" });
   const [loading, setLoading] = useState(false);
@@ -161,17 +161,19 @@ function StoresSection({ stores, onRefresh }: { stores: StoreItem[]; onRefresh: 
     <Card className="animate-fade-up">
       <div className="mb-4 flex items-center justify-between">
         <h2 className="text-lg font-semibold text-gray-900">Партнер дэлгүүрүүд</h2>
-        <button
-          type="button"
-          onClick={() => setOpen(!open)}
-          className="flex items-center gap-1 rounded-lg px-2 py-1 text-sm font-medium text-abico-blue transition-colors hover:bg-abico-blue/10 hover:text-abico-dark"
-        >
-          {open ? <X className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
-          {open ? "Болих" : "Нэмэх"}
-        </button>
+        {canCreate && (
+          <button
+            type="button"
+            onClick={() => setOpen(!open)}
+            className="flex items-center gap-1 rounded-lg px-2 py-1 text-sm font-medium text-abico-blue transition-colors hover:bg-abico-blue/10 hover:text-abico-dark"
+          >
+            {open ? <X className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
+            {open ? "Болих" : "Нэмэх"}
+          </button>
+        )}
       </div>
 
-      {open && (
+      {open && canCreate && (
         <form onSubmit={submit} className="mb-4 animate-fade-up space-y-3 rounded-xl border border-gray-200 bg-gray-50/60 p-4 [animation-duration:0.3s]">
           <Input label="Нэр" value={form.name} onChange={(v) => setForm({ ...form, name: v })} required />
           <Input label="Хаяг" value={form.address} onChange={(v) => setForm({ ...form, address: v })} />
@@ -201,11 +203,14 @@ function EmployeesSection({
   stores,
   employees,
   onRefresh,
+  meRole,
 }: {
   stores: StoreItem[];
   employees: EmployeeItem[];
   onRefresh: () => void;
+  meRole: string;
 }) {
+  const isStoreAdmin = meRole === "STORE_ADMIN";
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState({ name: "", phone: "", password: "", role: "EMPLOYEE", storeId: "" });
   const [loading, setLoading] = useState(false);
@@ -247,29 +252,33 @@ function EmployeesSection({
           <Input label="Нэр" value={form.name} onChange={(v) => setForm({ ...form, name: v })} required />
           <Input label="Утасны дугаар" value={form.phone} onChange={(v) => setForm({ ...form, phone: v })} required />
           <Input label="Нууц үг" type="password" value={form.password} onChange={(v) => setForm({ ...form, password: v })} required />
-          <div>
-            <label className="mb-1 block text-sm text-gray-700">Дэлгүүр</label>
-            <select
-              required
-              value={form.storeId}
-              onChange={(e) => setForm({ ...form, storeId: e.target.value })}
-              className="input-premium"
-            >
-              <option value="">— Сонгох —</option>
-              {stores.map((s) => <option key={s.id} value={s.id}>{s.name}</option>)}
-            </select>
-          </div>
-          <div>
-            <label className="mb-1 block text-sm text-gray-700">Эрх</label>
-            <select
-              value={form.role}
-              onChange={(e) => setForm({ ...form, role: e.target.value })}
-              className="input-premium"
-            >
-              <option value="EMPLOYEE">Ажилтан (Кассчин)</option>
-              <option value="STORE_ADMIN">Дэлгүүрийн Админ</option>
-            </select>
-          </div>
+          {!isStoreAdmin && (
+            <div>
+              <label className="mb-1 block text-sm text-gray-700">Дэлгүүр</label>
+              <select
+                required
+                value={form.storeId}
+                onChange={(e) => setForm({ ...form, storeId: e.target.value })}
+                className="input-premium"
+              >
+                <option value="">— Сонгох —</option>
+                {stores.map((s) => <option key={s.id} value={s.id}>{s.name}</option>)}
+              </select>
+            </div>
+          )}
+          {!isStoreAdmin && (
+            <div>
+              <label className="mb-1 block text-sm text-gray-700">Эрх</label>
+              <select
+                value={form.role}
+                onChange={(e) => setForm({ ...form, role: e.target.value })}
+                className="input-premium"
+              >
+                <option value="EMPLOYEE">Ажилтан (Кассчин)</option>
+                <option value="STORE_ADMIN">Дэлгүүрийн Админ</option>
+              </select>
+            </div>
+          )}
           {err && (
             <p className="rounded-xl bg-rose-50 px-3 py-2 text-sm font-medium text-rose-600">{err}</p>
           )}
@@ -301,7 +310,7 @@ type PromotionItem = {
   store: { name: string } | null;
 };
 
-function PromotionsSection({ stores, canDeactivate }: { stores: StoreItem[]; canDeactivate: boolean }) {
+function PromotionsSection({ stores, canDeactivate, isStoreAdmin }: { stores: StoreItem[]; canDeactivate: boolean; isStoreAdmin: boolean }) {
   const [promotions, setPromotions] = useState<PromotionItem[]>([]);
   const [loaded, setLoaded] = useState(false);
   const [open, setOpen] = useState(false);
@@ -372,17 +381,19 @@ function PromotionsSection({ stores, canDeactivate }: { stores: StoreItem[]; can
       {open && (
         <form onSubmit={submit} className="mb-4 animate-fade-up space-y-3 rounded-xl border border-gray-200 bg-gray-50/60 p-4 [animation-duration:0.3s]">
           <Input label="Гарчиг" value={form.title} onChange={(v) => setForm({ ...form, title: v })} required />
-          <div>
-            <label className="mb-1 block text-sm text-gray-700">Дэлгүүр</label>
-            <select
-              value={form.storeId}
-              onChange={(e) => setForm({ ...form, storeId: e.target.value })}
-              className="input-premium"
-            >
-              <option value="">Бүх дэлгүүр</option>
-              {stores.map((s) => <option key={s.id} value={s.id}>{s.name}</option>)}
-            </select>
-          </div>
+          {!isStoreAdmin && (
+            <div>
+              <label className="mb-1 block text-sm text-gray-700">Дэлгүүр</label>
+              <select
+                value={form.storeId}
+                onChange={(e) => setForm({ ...form, storeId: e.target.value })}
+                className="input-premium"
+              >
+                <option value="">Бүх дэлгүүр</option>
+                {stores.map((s) => <option key={s.id} value={s.id}>{s.name}</option>)}
+              </select>
+            </div>
+          )}
           <div>
             <label className="mb-1 block text-sm text-gray-700">Онооны үржвэр (1.1 – 10)</label>
             <input

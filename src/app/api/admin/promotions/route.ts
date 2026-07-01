@@ -36,13 +36,22 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
-    await requireRole(["PLATFORM_ADMIN", "STORE_ADMIN"]);
+    const session = await requireRole(["PLATFORM_ADMIN", "STORE_ADMIN"]);
     const body = schema.parse(await request.json());
+
+    // Дэлгүүрийн админ зөвхөн өөрийн дэлгүүрт зориулсан урамшуулал үүсгэнэ —
+    // "Бүх дэлгүүр" (компанийн хэмжээний) урамшуулал зөвхөн Platform Admin-д хамаарна.
+    let storeId = body.storeId || null;
+    if (session.role === "STORE_ADMIN") {
+      const admin = await db.user.findUnique({ where: { id: session.userId } });
+      if (!admin?.storeId) return apiError("Дэлгүүрт холбогдоогүй админ", 403);
+      storeId = admin.storeId;
+    }
 
     const promotion = await db.promotion.create({
       data: {
         title: body.title,
-        storeId: body.storeId || null,
+        storeId,
         multiplier: body.multiplier,
         startsAt: new Date(body.startsAt),
         endsAt: new Date(body.endsAt),
