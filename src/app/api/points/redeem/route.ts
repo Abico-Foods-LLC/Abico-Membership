@@ -7,6 +7,7 @@ import { apiError, apiSuccess } from "@/lib/utils";
 const schema = z.object({
   qrCode: z.string().min(5),
   points: z.number().int().positive("Хасах оноо 0-ээс их байх ёстой"),
+  reason: z.string().trim().max(200).optional(),
 });
 
 export async function POST(request: Request) {
@@ -34,7 +35,9 @@ export async function POST(request: Request) {
           employeeId: session.userId,
           type: "REDEEM",
           points: body.points,
-          description: `${body.points} оноо хасагдлаа`,
+          description: body.reason
+            ? `${body.points} оноо хасагдлаа — ${body.reason}`
+            : `${body.points} оноо хасагдлаа`,
         },
       });
     }, { isolationLevel: "Serializable" });

@@ -24,6 +24,7 @@ type AdminData = {
     id: string;
     points: number;
     type: string;
+    description: string | null;
     createdAt: string;
     user: { name: string };
     store: { name: string } | null;
@@ -82,17 +83,25 @@ export default function AdminPage() {
                 <div className="space-y-2">
                   {data.recentTransactions.length === 0 ? (
                     <p className="py-6 text-center text-sm text-gray-400">Гүйлгээ алга байна</p>
-                  ) : data.recentTransactions.map((tx) => (
-                    <div key={tx.id} className="card-premium-hover flex items-center justify-between px-3 py-2">
-                      <div>
-                        <p className="font-medium text-gray-900">{tx.user.name}</p>
-                        <p className="text-xs text-gray-500">
-                          {tx.store?.name ?? "—"} · {new Date(tx.createdAt).toLocaleString("mn-MN")}
+                  ) : data.recentTransactions.map((tx) => {
+                    const isRedeem = tx.type === "REDEEM";
+                    return (
+                      <div key={tx.id} className="card-premium-hover flex items-center justify-between px-3 py-2">
+                        <div className="min-w-0">
+                          <p className="font-medium text-gray-900">{tx.user.name}</p>
+                          <p className="text-xs text-gray-500">
+                            {tx.store?.name ?? "—"} · {new Date(tx.createdAt).toLocaleString("mn-MN")}
+                          </p>
+                          {tx.description && (
+                            <p className="mt-0.5 truncate text-xs text-gray-400">{tx.description}</p>
+                          )}
+                        </div>
+                        <p className={`shrink-0 font-bold ${isRedeem ? "text-rose-600" : "text-emerald-600"}`}>
+                          {isRedeem ? "-" : "+"}{formatPoints(tx.points)}
                         </p>
                       </div>
-                      <p className="font-bold text-emerald-600">+{formatPoints(tx.points)}</p>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </Card>
             </div>

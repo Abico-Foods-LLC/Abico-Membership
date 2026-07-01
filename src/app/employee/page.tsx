@@ -27,6 +27,7 @@ export default function EmployeePage() {
   const [lookupMode, setLookupMode] = useState<"qr" | "phone">("qr");
   const [purchaseAmount, setPurchaseAmount] = useState("");
   const [redeemPoints, setRedeemPoints] = useState("");
+  const [redeemReason, setRedeemReason] = useState("");
   const [member, setMember] = useState<MemberPreview | null>(null);
   const [earnResult, setEarnResult] = useState("");
   const [redeemResult, setRedeemResult] = useState("");
@@ -146,7 +147,7 @@ export default function EmployeePage() {
     const res = await fetch("/api/points/redeem", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ qrCode, points: Number(redeemPoints) }),
+      body: JSON.stringify({ qrCode, points: Number(redeemPoints), reason: redeemReason || undefined }),
     });
     const data = await res.json();
     setLoading(false);
@@ -156,6 +157,7 @@ export default function EmployeePage() {
     setRedeemResult(`${formatPoints(data.pointsRedeemed)} оноо хасагдлаа. Үлдэгдэл: ${formatPoints(data.remainingPoints)}`);
     setMember((m) => m && { ...m, totalPoints: data.remainingPoints });
     setRedeemPoints("");
+    setRedeemReason("");
   }
 
   const previewPoints = purchaseAmount ? Math.floor(Number(purchaseAmount) / POINTS_PER_MNT) : 0;
@@ -324,6 +326,15 @@ export default function EmployeePage() {
                   onChange={(e) => setRedeemPoints(e.target.value)}
                   placeholder="100"
                   required
+                  className="input-premium"
+                />
+              </label>
+              <label className="block">
+                <span className="mb-1 block text-sm text-gray-700">Юу авсан бэ? (заавал биш)</span>
+                <input
+                  value={redeemReason}
+                  onChange={(e) => setRedeemReason(e.target.value)}
+                  placeholder="Жишээ нь: 10% хямдрал / Кофе үнэгүй"
                   className="input-premium"
                 />
               </label>
