@@ -76,4 +76,8 @@ select option {
   .card-premium-hover {
     @apply card-premium hover:-translate-y-0.5 hover:shadow-elevated;
   }
+
+  .input-premium {
+    @apply w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-2.5 text-gray-900 outline-none transition-colors duration-200 placeholder:text-gray-400 focus:border-abico-blue focus:bg-white focus:ring-2 focus:ring-abico-blue/40;
+  }
 }
