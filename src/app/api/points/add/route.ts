@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { requireRole } from "@/lib/auth";
 import { db } from "@/lib/db";
-import { calculatePointsFromPurchase } from "@/lib/loyalty";
+import { calculatePointsFromPurchase, getMembershipTier, getTotalPoints } from "@/lib/loyalty";
 import { apiError, apiSuccess } from "@/lib/utils";
 
 const addPointsSchema = z.object({
@@ -42,6 +42,12 @@ export async function POST(request: Request) {
     const multiplier = promotion?.multiplier ?? 1;
     const points = Math.floor(basePoints * multiplier);
 
+    const priorTransactions = await db.pointTransaction.findMany({
+      where: { userId: member.id },
+      select: { type: true, points: true },
+    });
+    const beforeTier = getMembershipTier(getTotalPoints(priorTransactions));
+
     const transaction = await db.pointTransaction.create({
       data: {
         userId: member.id,
@@ -58,6 +64,17 @@ export async function POST(request: Request) {
         user: { select: { name: true, phone: true } },
       },
     });
+
+    const afterTier = getMembershipTier(getTotalPoints([...priorTransactions, { type: "EARN", points }]));
+    if (afterTier.id !== beforeTier.id) {
+      await db.notification.create({
+        data: {
+          userId: member.id,
+          title: `Та ${afterTier.nameMn} шатланд шилжлээ!`,
+          body: `Одооноос ${afterTier.discountPercent}% урамшуулал эдэлнэ.`,
+        },
+      });
+    }
 
     return apiSuccess({ transaction, pointsAdded: points });
   } catch (error) {

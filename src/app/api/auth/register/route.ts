@@ -68,6 +68,13 @@ export async function POST(request: Request) {
             description: "Урилгаар бүртгүүлсэн бонус",
           },
         }),
+        db.notification.create({
+          data: {
+            userId: referredById,
+            title: `${user.name} таны урилгаар бүртгүүллээ!`,
+            body: `+${REFERRAL_BONUS} оноо нэмэгдлээ.`,
+          },
+        }),
       ]);
     }
 
